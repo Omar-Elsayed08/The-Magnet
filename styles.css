@@ -1,0 +1,273 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: #f8f5f2;
+    font-family: 'Montserrat', sans-serif;
+    color: #2c3e50;
+}
+
+.content {
+    position: relative;
+}
+
+.route {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    filter: drop-shadow(0 0 12px rgba(44, 62, 80, 0.15));
+}
+
+.route svg {
+    width: 100%;
+    height: 100%;
+}
+
+.route .mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .route svg:not(.mobile) {
+        display: none;
+    }
+    .route .mobile {
+        display: block;
+    }
+}
+
+.route path {
+    fill: none;
+}
+
+.route .dashed {
+    stroke: rgba(44, 62, 80, 0.1);
+    stroke-width: 2px;
+    stroke-dasharray: 8, 12;
+    stroke-linecap: round;
+    animation: dashedAnimation 40s linear infinite;
+}
+
+.route .overlay {
+    stroke: #2c3e50;
+    stroke-width: 3px;
+    stroke-dasharray: 0;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.2s ease-out;
+}
+
+@keyframes dashedAnimation {
+    to {
+        stroke-dashoffset: -100;
+    }
+}
+
+.section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    position: relative;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    color: #fff;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 800px;
+}
+
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 4.5rem;
+    margin: 0;
+    letter-spacing: 0.1em;
+}
+
+.hero h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 1.8rem;
+    margin: 1rem 0;
+    letter-spacing: 0.2em;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-top: 2rem;
+}
+
+/* Featured Work Section */
+.featured-work {
+    background: #f8f5f2;
+    padding: 6rem 2rem;
+}
+
+.work-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.work-item {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.work-item:hover {
+    transform: translateY(-5px);
+}
+
+.work-item h3 {
+    font-family: 'Playfair Display', serif;
+    color: #2c3e50;
+    margin: 0 0 1.5rem 0;
+    font-size: 1.8rem;
+}
+
+.work-preview h4 {
+    font-family: 'Montserrat', sans-serif;
+    color: #34495e;
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.work-preview p {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+
+.excerpt {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #34495e;
+    margin-top: 1rem;
+    line-height: 1.6;
+}
+
+/* Artist Spotlight Section */
+.artist-spotlight {
+    background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+    color: #fff;
+    text-align: center;
+}
+
+.artist-spotlight h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    margin-bottom: 3rem;
+}
+
+.spotlight-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.artist-info h3 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.artist-info p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin: 1rem 0;
+}
+
+.artist-bio {
+    font-style: italic;
+    line-height: 1.8;
+}
+
+/* Submit Work Section */
+.submit-work {
+    background: #f8f5f2;
+    text-align: center;
+}
+
+.submit-work h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+}
+
+.submission-info {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.submission-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 3rem 0;
+}
+
+.category {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    color: #2c3e50;
+    transition: transform 0.3s ease;
+}
+
+.category:hover {
+    transform: translateY(-3px);
+}
+
+.submit-button {
+    background: #2c3e50;
+    color: #fff;
+    border: none;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+}
+
+.submit-button:hover {
+    background: #34495e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 3rem;
+    }
+    
+    .hero h2 {
+        font-size: 1.4rem;
+    }
+    
+    .work-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .submission-categories {
+        grid-template-columns: 1fr;
+    }
+}
