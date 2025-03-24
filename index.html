@@ -7,22 +7,664 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adventure Path</title>
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --coral: #e89082;
+            --forest: #3b574f;
+            --ocean: #4e83aa;
+            --lavender: #c1c2e4;
+            --sand: #dcc6be;
+        }
+
+        /* Navigation Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: var(--forest);
+            background: var(--lavender);
+            background: linear-gradient(135deg, var(--lavender) 0%, var(--sand) 100%);
+        }
+
+        .et-hero-tabs {
+            position: relative;
+            height: auto;
+            background: #fff;
+        }
+
+        .et-hero-tabs-container {
+            position: relative;
+            bottom: auto;
+            height: 70px;
+            background: #fff;
+        }
+
+        .et-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            background: #eee;
+            text-align: center;
+            padding: 0 2em;
+        }
+        .et-hero-tabs h1,
+        .et-slide h1 {
+            font-size: 2rem;
+            margin: 0;
+            letter-spacing: 1rem;
+        }
+
+        .et-hero-tabs h3,
+        .et-slide h3 {
+            font-size: 1rem;
+            letter-spacing: 0.3rem;
+            opacity: 0.6;
+        }
+        .et-hero-tabs-container {
+            display: flex;
+            flex-direction: row;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 70px;
+            box-shadow: 0 0 20px rgba(59, 87, 79, 0.15);
+            background: #fff;
+            z-index: 10;
+            transition: all 0.5s ease;
+            padding: 0 2rem;
+            box-sizing: border-box;
+        }
+
+        .et-hero-tabs-container--top {
+            position: fixed;
+            top: 0;
+            background: var(--lavender);
+        }
+
+        .et-hero-tabs-container--top .et-hero-tab {
+            color: var(--forest);
+        }
+
+        .et-hero-tabs-container--top .brand-title {
+            color: var(--forest);
+        }
+
+        .et-hero-tab {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            color: var(--forest);
+            letter-spacing: 0.1rem;
+            transition: all 0.5s ease;
+            font-size: 0.8rem;
+            position: relative;
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .et-hero-tab:hover,
+        .et-hero-tab.active {
+            color: white;
+            background: var(--coral);
+        }
+
+        .et-hero-tab::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--ocean);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .et-hero-tab:hover::after,
+        .et-hero-tab.active::after {
+            transform: scaleX(1);
+        }
+
+        .et-hero-tab-slider {
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 6px;
+            background: var(--lavender);
+            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        /* Content Styles */
+        .et-slide {
+            min-height: 100vh;
+            padding: 100px 2em;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: relative;
+            
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--forest);
+            margin-bottom: 2rem;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--coral);
+            margin-bottom: 3rem;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(59, 87, 79, 0.1);
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--lavender);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--coral), var(--ocean));
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(59, 87, 79, 0.15);
+            border-color: var(--ocean);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--coral);
+            margin-bottom: 1rem;
+        }
+
+        .card-content {
+            color: var(--forest);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--coral);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: var(--ocean);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 87, 79, 0.2);
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            margin-top: 0;
+            padding-top: 100px;
+            background: linear-gradient(135deg, var(--coral) 0%, var(--ocean) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, var(--forest) 0%, transparent 100%);
+            opacity: 0.1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            color: var(--sand);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            color: var(--lavender);
+            position: relative;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--sand);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            color: var(--forest);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--coral);
+            box-shadow: 0 0 0 3px rgba(232, 144, 130, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: var(--sand);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        @media (min-width: 800px) {
+            .et-hero-tab {
+                font-size: 1rem;
+            }
+        }
+        @media (min-width: 800px) {
+          .et-hero-tabs h1, .et-slide h1 {
+            font-size: 1rem;
+          }
+          .et-hero-tabs h3, .et-slide h3 {
+            font-size: 1rem;
+          }
+        }
+
+        /* Additional Decorative Elements */
+        .et-slide:nth-child(even) {
+            background: linear-gradient(135deg, var(--sand) 0%, white 100%);
+        }
+
+        .card:nth-child(3n+1)::before {
+            background: linear-gradient(to right, var(--coral), var(--lavender));
+        }
+
+        .card:nth-child(3n+2)::before {
+            background: linear-gradient(to right, var(--ocean), var(--forest));
+        }
+
+        .card:nth-child(3n+3)::before {
+            background: linear-gradient(to right, var(--forest), var(--sand));
+        }
+
+        /* Add decorative circles in the background */
+        .et-slide::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--coral), var(--ocean));
+            opacity: 0.1;
+            top: 10%;
+            right: -100px;
+            z-index: -1;
+        }
+
+        .et-slide::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--lavender), var(--sand));
+            opacity: 0.1;
+            bottom: -150px;
+            left: -150px;
+            z-index: -1;
+        }
+
+        /* Logo Styles */
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: rotate(45deg);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            color: var(--forest);
+            text-decoration: none;
+            margin-right: auto;
+        }
+
+        .nav-logo {
+            width: 40px;
+            margin-right: 10px;
+        }
+
+        /* Hero Section Modifications */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-logo {
+            width: 120px;
+            margin-bottom: 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="content">
-        <div w3-include-html="components/nav.html"></div>
-        <section class="section">Begin Your Journey</section>
-        <section class="section">Explore The Unknown</section>
-        <section class="section">Discover Wonders</section>
-        <section class="section">Chart New Paths</section>
-    </div>
-    <script src="scripts/nav.js"></script>
-    <script src="script.js"></script>
+    <!-- Navigation -->
+    <section class="et-hero-tabs">
+        <div class="et-hero-tabs-container">
+            <a href="#home" class="brand-title">
+                <img src="images/magnet-logo.png" alt="Adventure Path" class="nav-logo">
+            </a>
+            <a class="et-hero-tab" href="#home">Home</a>
+            <a class="et-hero-tab" href="#work">Work</a>
+            <a class="et-hero-tab" href="#about">About</a>
+            <a class="et-hero-tab" href="#contact">Contact</a>
+            <a class="et-hero-tab" href="#join">Join</a>
+            <span class="et-hero-tab-slider"></span>
+        </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="et-slide hero-section" id="home">
+        <div class="hero-content">
+            <img src="images/magnet-logo.png" alt="Adventure Path Compass" class="hero-logo">
+            <h1 class="hero-title">Welcome to Adventure Path</h1>
+            <p class="hero-subtitle">Discover the journey that awaits you</p>
+            <a href="#work" class="btn">Explore Our Work</a>
+        </div>
+    </section>
+
+    <!-- Content sections -->
+    <main class="et-main">
+        
+
+        <section class="et-slide" id="work">
+            <h2 class="section-title">Our Work</h2>
+            <p class="section-subtitle">Explore our latest projects and achievements</p>
+            <div class="card-container">
+                <div class="card">
+                    <h3 class="card-title">Project Alpha</h3>
+                    <p class="card-content">An innovative solution for modern challenges, combining cutting-edge technology with user-friendly design.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Project Beta</h3>
+                    <p class="card-content">Revolutionizing the way we interact with digital content through immersive experiences.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Project Gamma</h3>
+                    <p class="card-content">Pushing the boundaries of what's possible with next-generation technology solutions.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="et-slide" id="about">
+            <h2 class="section-title">About Us</h2>
+            <p class="section-subtitle">Learn about our mission and values</p>
+            <div class="card-container">
+                <div class="card">
+                    <h3 class="card-title">Our Mission</h3>
+                    <p class="card-content">To create innovative solutions that empower individuals and organizations to achieve their full potential.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Our Vision</h3>
+                    <p class="card-content">To be the leading force in technological advancement and digital transformation.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Our Values</h3>
+                    <p class="card-content">Innovation, integrity, collaboration, and excellence in everything we do.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="et-slide" id="contact">
+            <h2 class="section-title">Contact Us</h2>
+            <p class="section-subtitle">Get in touch with our team</p>
+            <div class="contact-form">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="Your Email">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" rows="5" placeholder="Your Message"></textarea>
+                </div>
+                <button class="btn">Send Message</button>
+            </div>
+        </section>
+
+        <section class="et-slide" id="join">
+            <h2 class="section-title">Join Our Team</h2>
+            <p class="section-subtitle">Become part of our growing family</p>
+            <div class="card-container">
+                <div class="card">
+                    <h3 class="card-title">Open Positions</h3>
+                    <p class="card-content">Explore current job openings and opportunities to join our innovative team.</p>
+                    <a href="#" class="btn">View Positions</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Benefits</h3>
+                    <p class="card-content">Learn about our comprehensive benefits package and work culture.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Internships</h3>
+                    <p class="card-content">Start your career with hands-on experience in a dynamic environment.</p>
+                    <a href="#" class="btn">Apply Now</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
     <script>
-        // Initialize the include functionality
-        includeHTML();
+        class StickyNavigation {
+            constructor() {
+                this.currentId = null;
+                this.currentTab = null;
+                this.tabContainerHeight = 70;
+                let self = this;
+                
+                $('.et-hero-tab').click(function(event) { 
+                    self.onTabClick(event, $(this)); 
+                });
+                
+                $(window).scroll(() => { 
+                    requestAnimationFrame(() => this.onScroll());
+                });
+                
+                $(window).resize(() => { 
+                    requestAnimationFrame(() => this.onResize());
+                });
+
+                this.onScroll();
+            }
+            
+            onTabClick(event, element) {
+                event.preventDefault();
+                let scrollTop = $(element.attr('href')).offset().top - this.tabContainerHeight + 1;
+                
+                $('.et-hero-tab').removeClass('active');
+                element.addClass('active');
+                
+                $('html, body').animate({ 
+                    scrollTop: scrollTop 
+                }, {
+                    duration: 600,
+                    easing: 'easeInOutCubic',
+                    complete: () => this.setSliderCss(element)
+                });
+            }
+            
+            onScroll() {
+                this.checkTabContainerPosition();
+                this.findCurrentTabSelector();
+            }
+            
+            onResize() {
+                if(this.currentId) {
+                    this.setSliderCss();
+                }
+            }
+            
+            checkTabContainerPosition() {
+                let offset = $('.et-hero-tabs').offset().top + $('.et-hero-tabs').height() - this.tabContainerHeight;
+                if($(window).scrollTop() > offset) {
+                    $('.et-hero-tabs-container').addClass('et-hero-tabs-container--top');
+                } else {
+                    $('.et-hero-tabs-container').removeClass('et-hero-tabs-container--top');
+                }
+            }
+            
+            findCurrentTabSelector() {
+                let newCurrentId;
+                let newCurrentTab;
+                let self = this;
+                let scrollTop = $(window).scrollTop();
+                
+                $('.et-hero-tab').each(function() {
+                    let id = $(this).attr('href');
+                    let offsetTop = $(id).offset().top - self.tabContainerHeight;
+                    let offsetBottom = $(id).offset().top + $(id).height() - self.tabContainerHeight;
+                    
+                    if(scrollTop >= offsetTop - 50 && scrollTop < offsetBottom + 50) {
+                        newCurrentId = id;
+                        newCurrentTab = $(this);
+                    }
+                });
+                
+                if(this.currentId != newCurrentId || this.currentId === null) {
+                    $('.et-hero-tab').removeClass('active');
+                    if(newCurrentTab) {
+                        newCurrentTab.addClass('active');
+                        this.currentId = newCurrentId;
+                        this.currentTab = newCurrentTab;
+                        this.setSliderCss(newCurrentTab);
+                    }
+                }
+            }
+            
+            setSliderCss(element) {
+                const tab = element || this.currentTab;
+                if(tab) {
+                    const width = tab.width();
+                    const left = tab.offset().left;
+                    $('.et-hero-tab-slider').css({
+                        'width': `${width}px`,
+                        'left': `${left}px`
+                    });
+                }
+            }
+        }
+
+        // Add easing function
+        $.easing.easeInOutCubic = function(x, t, b, c, d) {
+            if ((t/=d/2) < 1) return c/2*t*t*t + b;
+            return c/2*((t-=2)*t*t + 2) + b;
+        };
+
+        // Initialize the navigation when document is ready
+        $(document).ready(function() {
+            new StickyNavigation();
+        });
     </script>
 </body>
 </html>
