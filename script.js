@@ -99,4 +99,4 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initial update
     updatePath();
-}); 
+
