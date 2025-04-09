@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventure Path</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link href="styles.css" rel ='stylesheet'>
+</head>
+
+<style>
+    :root {
+    --coral: #e89082;
+    --forest: #3b574f;
+    --ocean: #4e83aa;
+    --lavender: #c1c2e4;
+    --sand: #dcc6be;
+    --c-grey: #c0b8b2;
+
+}
+    
+    .home .route {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0
+}
+
+.home .route svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 100% auto
+}
+
+.home .route svg path {
+    fill: none
+}
+
+.home .route svg path.dashed {
+    stroke-width: 3px;
+    stroke: var(--c-grey);
+    stroke-dasharray: 10 10
+}
+
+@media only screen and (max-width: 584px) {
+    .home .route svg path.dashed {
+        stroke-width:2px
+    }
+}
+
+.home .route svg path.overlay {
+    stroke-width: 5px;
+    stroke: var(--c-white)
+}
+
+.home .route svg.mobile {
+    display: none
+}
+
+@media only screen and (max-width: 584px) {
+    .home .route svg {
+        display:none
+    }
+
+    .home .route svg.mobile {
+        display: block
+    }
+}
+
+/* Logo Styles */
+.logo {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: rotate(45deg);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.brand-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.8rem;
+    color: var(--forest);
+    text-decoration: none;
+    margin-right: auto;
+    padding: 5px 0;
+}
+
+.nav-logo {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    object-fit: contain;
+    display: flex;
+    align-items: center;
+}
+</style>
+<body>
+    
+    <!-- Add the route SVG right after body opening -->
+    <div class="route">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1791 843" style="enable-background:new 0 0 1791 843;" xml:space="preserve" preserveAspectRatio="none">
+<path class="dashed" d="M884.6,0c4.1,95.5,25.7,126.3,139.3,228.8c198.2,178.9,206.3,411-116,520.6c-14.9,5-33.6,11.7-54.4,20 c-41.9,16.8-91.9,40.6-133.9,72.4c-0.5,0.4-1,0.8-1.5,1.2"></path>
+<path class="overlay" d="M884.6,0c4.1,95.5,25.7,126.3,139.3,228.8c198.2,178.9,206.3,411-116,520.6c-14.9,5-33.6,11.7-54.4,20 c-41.9,16.8-91.9,40.6-133.9,72.4c-0.5,0.4-1,0.8-1.5,1.2" style="stroke-dasharray: 1184.36, 1184.36; stroke-dashoffset: -978.172;"></path>
+</svg>
+        <svg class="mobile" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 376 706" style="enable-background:new 0 0 376 706;" xml:space="preserve" preserveAspectRatio="none">
+<path class="dashed" d="M175.9,0.5c-1.1,94.5,1.5,120.9,66.9,213.4c53.6,56.5,141,189.3,61.8,268.6C205.4,581.6,150,580,93.5,653.6 c-13.5,17.6-19.4,34.9-18.9,51.6"></path>
+<path class="overlay" d="M175.9,0.5c-1.1,94.5,1.5,120.9,66.9,213.4c53.6,56.5,141,189.3,61.8,268.6C205.4,581.6,150,580,93.5,653.6 c-13.5,17.6-19.4,34.9-18.9,51.6" style="stroke-dasharray: 862.022, 862.022; stroke-dashoffset: -711.949;"></path>
+</svg>
+    </div>
+
+    <div id="content"></div>
+
+<script>
+  fetch('navbar2.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('content').innerHTML = data;
+    })
+    .catch(error => console.error('Error loading the HTML file:', error));
+</script>
+
+    
+
+   
+
+    <!-- Hero Section -->
+    <section class="et-slide hero-section" id="home">
+        <div class="hero-content">
+            <img src="images/magnet-logo.png" alt="Adventure Path Compass" class="hero-logo">
+            <h1 class="hero-title">Welcome to Adventure Path</h1>
+            <p class="hero-subtitle">Discover the journey that awaits you</p>
+            <div class="testimonial">
+                <blockquote>
+                    The creative elements you'll find in The Magnet are nothing short of stunning. They speak with such sophistication, meet the ear with mature and diverse discoveries
+                </blockquote>
+                <cite>- Chris Clark</cite>
+            </div>
+            <a href="#work" class="btn">Explore Our Work</a>
+        </div>
+    </section>
+
+    <!-- Content sections -->
+    <main class="et-main">
+        <section class="et-slide" id="work">
+            <h2 class="section-title">Our Work</h2>
+            <p class="section-subtitle">Explore our latest projects and achievements</p>
+            <div class="card-container">
+                <div class="card">
+                    <h3 class="card-title">Project Alpha</h3>
+                    <p class="card-content">An innovative solution for modern challenges, combining cutting-edge technology with user-friendly design.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Project Beta</h3>
+                    <p class="card-content">Revolutionizing the way we interact with digital content through immersive experiences.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Project Gamma</h3>
+                    <p class="card-content">Pushing the boundaries of what's possible with next-generation technology solutions.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="et-slide" id="literature">
+            <h2 class="section-title">Literature</h2>
+            <p class="section-subtitle">Explore our written works</p>
+            <div class="card-container">
+                <div class="card">
+                    <h3 class="card-title">Poetry</h3>
+                    <p class="card-content">Contemporary verses and rhythmic expressions that capture the essence of modern life.</p>
+                    <a href="#" class="btn">Read More</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Short Stories</h3>
+                    <p class="card-content">Compelling narratives that transport readers to new worlds and perspectives.</p>
+                    <a href="#" class="btn">Read More</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Essays</h3>
+                    <p class="card-content">Thought-provoking pieces that explore ideas, culture, and human experience.</p>
+                    <a href="#" class="btn">Read More</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="et-slide" id="film">
+            <h2 class="section-title">Film</h2>
+            <p class="section-subtitle">Visual storytelling through motion</p>
+            <div class="card-container">
+                <div class="card">
+                    <h3 class="card-title">Short Films</h3>
+                    <p class="card-content">Captivating stories told through the lens of emerging filmmakers.</p>
+                    <a href="#" class="btn">Watch Now</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Documentaries</h3>
+                    <p class="card-content">Real stories that illuminate the world around us.</p>
+                    <a href="#" class="btn">Watch Now</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Experimental</h3>
+                    <p class="card-content">Pushing the boundaries of conventional filmmaking.</p>
+                    <a href="#" class="btn">Watch Now</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="et-slide" id="art">
+            <h2 class="section-title">Art Gallery</h2>
+            <p class="section-subtitle">Explore our creative expressions</p>
+            <div class="card-container">
+                <div class="card">
+                    <h3 class="card-title">Digital Art</h3>
+                    <p class="card-content">Contemporary digital artworks pushing the boundaries of creativity and technology.</p>
+                    <a href="#" class="btn">View Gallery</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Traditional Media</h3>
+                    <p class="card-content">Classic artistic expressions through painting, sculpture, and mixed media.</p>
+                    <a href="#" class="btn">View Gallery</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Experimental</h3>
+                    <p class="card-content">Innovative art pieces that challenge conventional artistic boundaries.</p>
+                    <a href="#" class="btn">View Gallery</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="et-slide" id="about">
+            <h2 class="section-title">About Us</h2>
+            <p class="section-subtitle">The story behind Adventure Path</p>
+            <div class="card-container">
+                <div class="card">
+                    <h3 class="card-title">Our Mission</h3>
+                    <p class="card-content">Fostering creativity and providing a platform for emerging artists across multiple mediums.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Our Community</h3>
+                    <p class="card-content">A diverse collective of creators, thinkers, and innovators pushing artistic boundaries.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Get Involved</h3>
+                    <p class="card-content">Join our community and be part of the creative revolution.</p>
+                    <a href="#" class="btn">Contact Us</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="et-slide" id="join">
+            <h2 class="section-title">Join Our Team</h2>
+            <p class="section-subtitle">Become part of our growing family</p>
+            <div class="card-container">
+                <div class="card">
+                    <h3 class="card-title">Open Positions</h3>
+                    <p class="card-content">Explore current job openings and opportunities to join our innovative team.</p>
+                    <a href="#" class="btn">View Positions</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Benefits</h3>
+                    <p class="card-content">Learn about our comprehensive benefits package and work culture.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Internships</h3>
+                    <p class="card-content">Start your career with hands-on experience in a dynamic environment.</p>
+                    <a href="#" class="btn">Apply Now</a>
+                </div>
+            </div>
+        </section>
+        <script type="module" src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"></script>
+<spline-viewer url="https://prod.spline.design/UWoeqiir20o49Dah/scene.splinecode"></spline-viewer>
+    </main>
+
+    <script>
+        class StickyNavigation {
+            constructor() {
+                this.currentId = null;
+                this.currentTab = null;
+                this.tabContainerHeight = 70;
+                let self = this;
+                
+                $('.et-hero-tab').click(function(event) { 
+                    self.onTabClick(event, $(this)); 
+                });
+
+                // Mobile menu toggle
+                $('.mobile-menu-btn').click(function() {
+                    $(this).toggleClass('active');
+                    $('.et-hero-tabs-container').toggleClass('mobile-menu-open');
+                });
+                
+                $(window).scroll(() => { 
+                    requestAnimationFrame(() => this.onScroll());
+                });
+                
+                $(window).resize(() => { 
+                    requestAnimationFrame(() => this.onResize());
+                });
+
+                this.onScroll();
+            }
+            
+            onTabClick(event, element) {
+                event.preventDefault();
+                let scrollTop = $(element.attr('href')).offset().top - this.tabContainerHeight + 1;
+                
+                $('.et-hero-tab').removeClass('active');
+                element.addClass('active');
+                
+                $('html, body').animate({ 
+                    scrollTop: scrollTop 
+                }, {
+                    duration: 600,
+                    easing: 'easeInOutCubic',
+                    complete: () => {
+                        this.setSliderCss(element);
+                        // Close mobile menu after clicking
+                        $('.et-hero-tabs-container').removeClass('mobile-menu-open');
+                        $('.mobile-menu-btn').removeClass('active');
+                    }
+                });
+            }
+            
+            onScroll() {
+                this.checkTabContainerPosition();
+                this.findCurrentTabSelector();
+            }
+            
+            onResize() {
+                if(this.currentId) {
+                    this.setSliderCss();
+                }
+            }
+            
+            checkTabContainerPosition() {
+                let offset = $('.et-hero-tabs').offset().top + $('.et-hero-tabs').height() - this.tabContainerHeight;
+                if($(window).scrollTop() > offset) {
+                    $('.et-hero-tabs-container').addClass('et-hero-tabs-container--top');
+                } else {
+                    $('.et-hero-tabs-container').removeClass('et-hero-tabs-container--top');
+                }
+            }
+            
+            findCurrentTabSelector() {
+                let newCurrentId;
+                let newCurrentTab;
+                let self = this;
+                let scrollTop = $(window).scrollTop();
+                
+                $('.et-hero-tab').each(function() {
+                    let id = $(this).attr('href');
+                    let offsetTop = $(id).offset().top - self.tabContainerHeight;
+                    let offsetBottom = $(id).offset().top + $(id).height() - self.tabContainerHeight;
+                    
+                    if(scrollTop >= offsetTop - 50 && scrollTop < offsetBottom + 50) {
+                        newCurrentId = id;
+                        newCurrentTab = $(this);
+                    }
+                });
+                
+                if(this.currentId != newCurrentId || this.currentId === null) {
+                    $('.et-hero-tab').removeClass('active');
+                    if(newCurrentTab) {
+                        newCurrentTab.addClass('active');
+                        this.currentId = newCurrentId;
+                        this.currentTab = newCurrentTab;
+                        this.setSliderCss(newCurrentTab);
+                    }
+                }
+            }
+            
+            setSliderCss(element) {
+                const tab = element || this.currentTab;
+                if(tab) {
+                    const width = tab.width();
+                    const left = tab.offset().left;
+                    $('.et-hero-tab-slider').css({
+                        'width': `${width}px`,
+                        'left': `${left}px`
+                    });
+                }
+            }
+        }
+
+        // Add easing function
+        $.easing.easeInOutCubic = function(x, t, b, c, d) {
+            if ((t/=d/2) < 1) return c/2*t*t*t + b;
+            return c/2*((t-=2)*t*t + 2) + b;
+        };
+
+        // Initialize the navigation when document is ready
+        $(document).ready(function() {
+            new StickyNavigation();
+        });
+    </script> 
+    
+</body>
+</html>

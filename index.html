@@ -2,356 +2,496 @@
 <html lang="en">
 
 <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adventure Path</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-    <link href="styles.css" rel ='stylesheet'>
-</head>
-
-
-<body>
-    
-    <!-- Add the route SVG right after body opening -->
-    <div class="route">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path class="dashed" d="M50,0 C45,20 55,40 50,60 C45,80 55,100 50,100"></path>
-        </svg>
-    </div>
+    <title>Wander - Literary Arts Magazine</title>
+    <link href="styles.css" rel='stylesheet'>
 
     <style>
-        .route {
-            position: absolute;
-            top: 100vh;
-            left: 50%;
-            width: 2px;
-            height: 300vh;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translateX(-50%);
+        :root {
+            --coral: #e89082;
+            --forest: #3b574f;
+            --ocean: #4e83aa;
+            --lavender: #c1c2e4;
+            --sand: #dcc6be;
+            --c-grey: #c0b8b2;
         }
 
-        .route svg {
-            position: fixed;
-            top: 100vh;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--sand);
+            color: var(--forest);
+            overflow-x: hidden;
+        }
+
+        /* Trail Path */
+        .trail-path {
+            position: absolute;
+            top: 0;
+            left: 50px;
+            width: 6px;
+            height: 100%;
+            background: var(--coral);
+            z-index: 1;
+        }
+
+        .trail-dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--ocean);
+            border-radius: 50%;
+            left: -7px;
+            transform: translateX(-50%);
+            z-index: 2;
+            box-shadow: 0 0 15px rgba(78, 131, 170, 0.6);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
             width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(193, 194, 228, 0.3), rgba(59, 87, 79, 0.5));
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            color: var(--forest);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 900;
+            text-shadow: 4px 4px 4px rgb(61, 59, 57);
+            font-family: 'Bestie Seventy', sans-serif !important;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            color: var(--forest);
+            font-weight: 300;
+        }
+
+        .hero-button {
+            padding: 12px 30px;
+            background-color: var(--coral);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(232, 144, 130, 0.5);
+        }
+
+        .hero-button:hover {
+            background-color: var(--ocean);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(78, 131, 170, 0.6);
+        }
+
+        /* Navigation */
+        .et-hero-tabs {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: var(--sand);
+            width: 100%;
+        }
+
+        .et-hero-tabs-container {
+            display: flex;
+            flex-direction: row;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background: var(--forest);
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .et-hero-tabs-container--top {
+            position: fixed;
+            top: 0;
+            bottom: auto;
+        }
+
+        .et-hero-tab {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            color: white;
+            letter-spacing: 0.1rem;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            text-decoration: none;
             height: 100%;
         }
 
-        .route path {
-            fill: none;
-            stroke: var(--coral);
-            stroke-width: 2px;
-            stroke-dasharray: 4, 8;
-            stroke-linecap: round;
-            opacity: 1;
+        .et-hero-tab:hover {
+            color: var(--lavender);
+            background: rgba(78, 131, 170, 0.1);
         }
 
-        @media (max-width: 768px) {
-            .route {
-                left: 30px;
-                transform: none;
+        .et-hero-tab.active {
+            color: var(--coral);
+            font-weight: 600;
+        }
+
+        .et-hero-tab-slider {
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 3px;
+            background: var(--coral);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 25px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .mobile-menu-btn span {
+            position: absolute;
+            height: 3px;
+            width: 100%;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn span:nth-child(1) {
+            top: 0;
+        }
+
+        .mobile-menu-btn span:nth-child(2) {
+            top: 10px;
+        }
+
+        .mobile-menu-btn span:nth-child(3) {
+            top: 20px;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* Floating elements */
+        .floating {
+            position: absolute;
+            background: var(--lavender);
+            opacity: 0.3;
+            border-radius: 50%;
+            z-index: 0;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .floating:nth-child(1) {
+            width: 150px;
+            height: 150px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            background: var(--coral);
+        }
+
+        .floating:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            left: 80%;
+            animation-delay: -2s;
+            animation-duration: 18s;
+            background: var(--ocean);
+        }
+
+        .floating:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            top: 30%;
+            left: 80%;
+            animation-delay: -5s;
+            animation-duration: 12s;
+            background: var(--lavender);
+        }
+
+        .floating:nth-child(4) {
+            width: 80px;
+            height: 80px;
+            top: 70%;
+            left: 20%;
+            animation-delay: -7s;
+            animation-duration: 20s;
+            background: var(--forest);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
             }
+
+            50% {
+                transform: translate(-20px, -20px);
+            }
+
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        /* Sections */
+        section {
+            position: relative;
+            min-height: 100vh;
+            padding: 100px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .section-content {
+            max-width: 1000px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: var(--forest);
+        }
+
+        .section-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: var(--forest);
+        }
+
+        #about {
+            background-color: var(--sand);
+        }
+
+        #submissions {
+            background-color: var(--lavender);
+        }
+
+        #team {
+            background-color: var(--c-grey);
+        }
+
+        #contact {
+            background-color: var(--ocean);
+            color: white;
+        }
+
+        #contact .section-title,
+        #contact .section-text {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .et-hero-tabs-container {
+                flex-direction: column;
+                height: auto;
+                max-height: 0;
+                overflow: hidden;
+                position: fixed;
+                top: 0;
+                width: 100%;
+            }
+
+            .et-hero-tabs-container--top {
+                height: auto;
+            }
+
+            .et-hero-tabs-container.mobile-menu-open {
+                max-height: 300px;
+            }
+
+            .et-hero-tab {
+                padding: 15px 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .trail-path {
+                left: 30px;
+            }
+        }
+        @font-face {
+            font-family: 'Bestie Seventy';
+            src: url('styles/Bestie Seventy.ttf') format('truetype');
+            font-display: swap !important;
         }
     </style>
+</head>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const route = document.querySelector('.route');
-            const heroSection = document.querySelector('.hero-section');
-            
-            function updatePosition() {
-                const heroHeight = heroSection.offsetHeight;
-                route.style.top = `${heroHeight}px`;
-            }
-            
-            updatePosition();
-            window.addEventListener('resize', updatePosition);
-        });
-    </script>
-
-    <!-- Navigation -->
-    <section class="et-hero-tabs">
-        <div class="et-hero-tabs-container">
-            <a href="#home" class="brand-title">
-                <img src="images/magnet-logo.png" alt="Adventure Path" class="nav-logo">
-            </a>
-            <a class="et-hero-tab" href="#home">Home</a>
-            <a class="et-hero-tab" href="#literature">Literature</a>
-            <a class="et-hero-tab" href="#film">Film</a>
-            <a class="et-hero-tab" href="#art">Art</a>
-            <a class="et-hero-tab" href="#about">About Us</a>
-            <a class="et-hero-tab" href="#join">Join</a>
-            <span class="et-hero-tab-slider"></span>
-        </div>
-    </section>
+<body>
+    <!-- Trail Path -->
+    <div class="trail-path">
+        <div class="trail-dot" id="trailDot"></div>
+    </div>
 
     <!-- Hero Section -->
-    <section class="et-slide hero-section" id="home">
+    <div class="hero">
+        <div id="Render"></div>
+
+        <div class="floating"></div>
+        <div class="floating"></div>
+        <div class="floating"></div>
+        <div class="floating"></div>
+        <div class="hero-overlay"></div>
         <div class="hero-content">
-            <img src="images/magnet-logo.png" alt="Adventure Path Compass" class="hero-logo">
-            <h1 class="hero-title">Welcome to Adventure Path</h1>
-            <p class="hero-subtitle">Discover the journey that awaits you</p>
-            <div class="testimonial">
-                <blockquote>
-                    "The creative elements you'll find in The Magnet are nothing short of stunning. They speak with such sophistication, meet the ear with mature and diverse discoveries"
-                </blockquote>
-                <cite>- Chris Clark</cite>
-            </div>
-            <a href="#work" class="btn">Explore Our Work</a>
+            <h1 class="hero-title">The Magnet</h1>
+            <p class="hero-subtitle">A Literary Arts Magazine Exploring Paths Unseen</p>
+            <a href="#about" class="hero-button">Begin Journey</a>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div id="Navbar"></div>
+
+
+
+   
+
+    <!-- Sections -->
+    <section id="about">
+        <div class="section-content">
+            <h2 class="section-title">About Wander</h2>
+            <p class="section-text">Wander is a student-led literary arts magazine exploring themes of journey,
+                discovery, and the unknown paths we take. Through poetry, prose, photography, and visual arts, we invite
+                you to explore the meanderings of creative expression.</p>
         </div>
     </section>
 
-    <!-- Content sections -->
-    <main class="et-main">
-        <section class="et-slide" id="work">
-            <h2 class="section-title">Our Work</h2>
-            <p class="section-subtitle">Explore our latest projects and achievements</p>
-            <div class="card-container">
-                <div class="card">
-                    <h3 class="card-title">Project Alpha</h3>
-                    <p class="card-content">An innovative solution for modern challenges, combining cutting-edge technology with user-friendly design.</p>
-                    <a href="#" class="btn">Learn More</a>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Project Beta</h3>
-                    <p class="card-content">Revolutionizing the way we interact with digital content through immersive experiences.</p>
-                    <a href="#" class="btn">Learn More</a>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Project Gamma</h3>
-                    <p class="card-content">Pushing the boundaries of what's possible with next-generation technology solutions.</p>
-                    <a href="#" class="btn">Learn More</a>
-                </div>
-            </div>
-        </section>
+    <section id="submissions">
+        <div class="section-content">
+            <h2 class="section-title">Submissions</h2>
+            <p class="section-text">We welcome submissions from students and faculty. Whether you're a writer,
+                photographer, painter, or digital artist, there's a place for your work in our pages. Share your
+                perspective on wandering through the literal and metaphorical landscapes of life.</p>
+        </div>
+    </section>
 
-        <section class="et-slide" id="literature">
-            <h2 class="section-title">Literature</h2>
-            <p class="section-subtitle">Explore our written works</p>
-            <div class="card-container">
-                <div class="card">
-                    <h3 class="card-title">Poetry</h3>
-                    <p class="card-content">Contemporary verses and rhythmic expressions that capture the essence of modern life.</p>
-                    <a href="#" class="btn">Read More</a>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Short Stories</h3>
-                    <p class="card-content">Compelling narratives that transport readers to new worlds and perspectives.</p>
-                    <a href="#" class="btn">Read More</a>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Essays</h3>
-                    <p class="card-content">Thought-provoking pieces that explore ideas, culture, and human experience.</p>
-                    <a href="#" class="btn">Read More</a>
-                </div>
-            </div>
-        </section>
+    <section id="team">
+        <div class="section-content">
+            <h2 class="section-title">Our Team</h2>
+            <p class="section-text">Meet the wanderers behind the magazine - passionate students dedicated to curating
+                and presenting the best creative works from our community.</p>
+        </div>
+    </section>
 
-        <section class="et-slide" id="film">
-            <h2 class="section-title">Film</h2>
-            <p class="section-subtitle">Visual storytelling through motion</p>
-            <div class="card-container">
-                <div class="card">
-                    <h3 class="card-title">Short Films</h3>
-                    <p class="card-content">Captivating stories told through the lens of emerging filmmakers.</p>
-                    <a href="#" class="btn">Watch Now</a>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Documentaries</h3>
-                    <p class="card-content">Real stories that illuminate the world around us.</p>
-                    <a href="#" class="btn">Watch Now</a>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Experimental</h3>
-                    <p class="card-content">Pushing the boundaries of conventional filmmaking.</p>
-                    <a href="#" class="btn">Watch Now</a>
-                </div>
-            </div>
-        </section>
+    <section id="contact">
+        <div class="section-content">
+            <h2 class="section-title">Contact Us</h2>
+            <p class="section-text">Have questions or want to join our team? Reach out to us and become part of our
+                wandering community.</p>
+        </div>
+    </section>
 
-        <section class="et-slide" id="art">
-            <h2 class="section-title">Art Gallery</h2>
-            <p class="section-subtitle">Explore our creative expressions</p>
-            <div class="card-container">
-                <div class="card">
-                    <h3 class="card-title">Digital Art</h3>
-                    <p class="card-content">Contemporary digital artworks pushing the boundaries of creativity and technology.</p>
-                    <a href="#" class="btn">View Gallery</a>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Traditional Media</h3>
-                    <p class="card-content">Classic artistic expressions through painting, sculpture, and mixed media.</p>
-                    <a href="#" class="btn">View Gallery</a>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Experimental</h3>
-                    <p class="card-content">Innovative art pieces that challenge conventional artistic boundaries.</p>
-                    <a href="#" class="btn">View Gallery</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="et-slide" id="about">
-            <h2 class="section-title">About Us</h2>
-            <p class="section-subtitle">The story behind Adventure Path</p>
-            <div class="card-container">
-                <div class="card">
-                    <h3 class="card-title">Our Mission</h3>
-                    <p class="card-content">Fostering creativity and providing a platform for emerging artists across multiple mediums.</p>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Our Community</h3>
-                    <p class="card-content">A diverse collective of creators, thinkers, and innovators pushing artistic boundaries.</p>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Get Involved</h3>
-                    <p class="card-content">Join our community and be part of the creative revolution.</p>
-                    <a href="#" class="btn">Contact Us</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="et-slide" id="join">
-            <h2 class="section-title">Join Our Team</h2>
-            <p class="section-subtitle">Become part of our growing family</p>
-            <div class="card-container">
-                <div class="card">
-                    <h3 class="card-title">Open Positions</h3>
-                    <p class="card-content">Explore current job openings and opportunities to join our innovative team.</p>
-                    <a href="#" class="btn">View Positions</a>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Benefits</h3>
-                    <p class="card-content">Learn about our comprehensive benefits package and work culture.</p>
-                    <a href="#" class="btn">Learn More</a>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Internships</h3>
-                    <p class="card-content">Start your career with hands-on experience in a dynamic environment.</p>
-                    <a href="#" class="btn">Apply Now</a>
-                </div>
-            </div>
-        </section>
-        <script type="module" src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"></script>
-<spline-viewer url="https://prod.spline.design/UWoeqiir20o49Dah/scene.splinecode"></spline-viewer>
-    </main>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        class StickyNavigation {
-            constructor() {
-                this.currentId = null;
-                this.currentTab = null;
-                this.tabContainerHeight = 70;
-                let self = this;
-                
-                $('.et-hero-tab').click(function(event) { 
-                    self.onTabClick(event, $(this)); 
-                });
-                
-                $(window).scroll(() => { 
-                    requestAnimationFrame(() => this.onScroll());
-                });
-                
-                $(window).resize(() => { 
-                    requestAnimationFrame(() => this.onResize());
+        fetch('navbar2.html')
+            .then(response => response.text())
+            .then(data => {
+                const content = document.getElementById('Navbar');
+                content.innerHTML = data;
+
+                // Execute any scripts in the loaded navbar
+                content.querySelectorAll('script').forEach(script => {
+                    const newScript = document.createElement('script');
+                    newScript.textContent = script.textContent;
+                    document.body.appendChild(newScript);
                 });
 
-                this.onScroll();
-            }
-            
-            onTabClick(event, element) {
-                event.preventDefault();
-                let scrollTop = $(element.attr('href')).offset().top - this.tabContainerHeight + 1;
-                
-                $('.et-hero-tab').removeClass('active');
-                element.addClass('active');
-                
-                $('html, body').animate({ 
-                    scrollTop: scrollTop 
-                }, {
-                    duration: 600,
-                    easing: 'easeInOutCubic',
-                    complete: () => this.setSliderCss(element)
-                });
-            }
-            
-            onScroll() {
-                this.checkTabContainerPosition();
-                this.findCurrentTabSelector();
-            }
-            
-            onResize() {
-                if(this.currentId) {
-                    this.setSliderCss();
-                }
-            }
-            
-            checkTabContainerPosition() {
-                let offset = $('.et-hero-tabs').offset().top + $('.et-hero-tabs').height() - this.tabContainerHeight;
-                if($(window).scrollTop() > offset) {
-                    $('.et-hero-tabs-container').addClass('et-hero-tabs-container--top');
-                } else {
-                    $('.et-hero-tabs-container').removeClass('et-hero-tabs-container--top');
-                }
-            }
-            
-            findCurrentTabSelector() {
-                let newCurrentId;
-                let newCurrentTab;
-                let self = this;
-                let scrollTop = $(window).scrollTop();
-                
-                $('.et-hero-tab').each(function() {
-                    let id = $(this).attr('href');
-                    let offsetTop = $(id).offset().top - self.tabContainerHeight;
-                    let offsetBottom = $(id).offset().top + $(id).height() - self.tabContainerHeight;
-                    
-                    if(scrollTop >= offsetTop - 50 && scrollTop < offsetBottom + 50) {
-                        newCurrentId = id;
-                        newCurrentTab = $(this);
-                    }
-                });
-                
-                if(this.currentId != newCurrentId || this.currentId === null) {
-                    $('.et-hero-tab').removeClass('active');
-                    if(newCurrentTab) {
-                        newCurrentTab.addClass('active');
-                        this.currentId = newCurrentId;
-                        this.currentTab = newCurrentTab;
-                        this.setSliderCss(newCurrentTab);
-                    }
-                }
-            }
-            
-            setSliderCss(element) {
-                const tab = element || this.currentTab;
-                if(tab) {
-                    const width = tab.width();
-                    const left = tab.offset().left;
-                    $('.et-hero-tab-slider').css({
-                        'width': `${width}px`,
-                        'left': `${left}px`
-                    });
-                }
-            }
-        }
-
-        // Add easing function
-        $.easing.easeInOutCubic = function(x, t, b, c, d) {
-            if ((t/=d/2) < 1) return c/2*t*t*t + b;
-            return c/2*((t-=2)*t*t + 2) + b;
-        };
-
-        // Initialize the navigation when document is ready
-        $(document).ready(function() {
-            new StickyNavigation();
-        });
+                // Initialize the navigation AFTER the navbar is loaded
+                initializeNavigation();
+            })
+            .catch(error => console.error('Error loading the HTML file:', error));
     </script>
-    
+    <!--
+     <script>
+        fetch('3dtest.html')
+            .then(response => response.text())
+            .then(data => {
+                const content = document.getElementById('Render');
+                content.innerHTML = data;
+
+                // Execute any scripts in the loaded navbar
+                content.querySelectorAll('script').forEach(script => {
+                    const newScript = document.createElement('script');
+                    newScript.textContent = script.textContent;
+                    document.body.appendChild(newScript);
+                });
+
+                // Initialize the navigation AFTER the navbar is loaded
+                initializeNavigation();
+            })
+            .catch(error => console.error('Error loading the HTML file:', error));
+    </script>
+-->
 </body>
+
 </html>
