@@ -11,7 +11,7 @@ window.onmousedown = e => {
   track.dataset.mouseDownAt = e.clientX;
 }
 
-// Handle mouse up event - reset the mouse position and store the current percentage
+// Handle mouse up event - reset the mouse position and store the current position
 window.onmouseup = () => {
   track.dataset.mouseDownAt = "0";
   track.dataset.prevPercentage = track.dataset.percentage;
@@ -27,12 +27,11 @@ window.onmousemove = e => {
   const trackWidth = track.offsetWidth;
   const windowWidth = window.innerWidth;
   
-  // Convert mouse movement to a percentage (-100 to 0)
-  const percentage = (mouseDelta / windowWidth) * -100;
-  // Ensure the percentage stays within bounds
-  targetPercentage = Math.min(Math.max(parseFloat(track.dataset.prevPercentage) + percentage, -100), 0);
+  // Convert mouse movement to pixels
+  const percentage = (mouseDelta/windowWidth) * -100;
+  targetPercentage = Math.min(Math.max(parseFloat(track.dataset.prevPercentage || 0) + percentage, -100), 0);
   
-  // Store the new percentage
+  // Store the new position
   track.dataset.percentage = targetPercentage;
   
   // Start animation if not already running
@@ -44,11 +43,16 @@ window.onmousemove = e => {
 
 // Animation function using requestAnimationFrame
 function animate() {
-  // Smoothly interpolate between current and target percentage
+  // Smoothly interpolate between current and target position
   currentPercentage += (targetPercentage - currentPercentage) * 0.07;
   
   // Apply the transform to move the track
   track.style.transform = `translate(${currentPercentage}%, -50%)`;
+  
+  // Move each image within its container for parallax effect
+  for(const image of track.getElementsByClassName("image")) {
+    image.style.objectPosition = `${currentPercentage + 100}% center`;
+  }
   
   // Continue animation if we haven't reached the target
   if (Math.abs(targetPercentage - currentPercentage) > 0.1) {
@@ -60,16 +64,13 @@ function animate() {
 
 // Handle mouse wheel event for horizontal scrolling
 window.addEventListener('wheel', (e) => {
-  // Prevent default vertical scrolling
+  // Prevent default scrolling behavior
   e.preventDefault();
   
-  // Get current scroll position
-  const currentScrollPercentage = parseFloat(track.dataset.percentage || 0);
-  // Convert vertical scroll to horizontal movement (adjust 0.1 to change speed)
-  // Negative sign reverses the direction
-  const scrollAmount = -e.deltaY * 0.1;
-  // Ensure the percentage stays within bounds
-  targetPercentage = Math.min(Math.max(currentScrollPercentage + scrollAmount, -100), 0);
+  // Get current percentage and calculate new target
+  const currentPercentage = parseFloat(track.dataset.percentage || 0);
+  const delta = -e.deltaY * 0.02; // Adjust this value to control scroll speed
+  targetPercentage = Math.min(Math.max(currentPercentage - delta, -100), 0);
   
   // Store the new percentage
   track.dataset.percentage = targetPercentage;
@@ -79,4 +80,4 @@ window.addEventListener('wheel', (e) => {
     isAnimating = true;
     animate();
   }
-}, { passive: false }); // passive: false allows us to prevent default scrolling 
+}, { passive: false });

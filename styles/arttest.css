@@ -10,30 +10,37 @@ body {
   gap: 4vmin;
   position: absolute;
   left: 10%;
-  right:10%;
+  right: 10%;
   top: 50%;
   transform: translate(0%, -50%);
   user-select: none;
   white-space: nowrap;
-  transition: transform 0.3s ease-out;
+  transition: transform 0.1s ease-out;
 }
 
 #image-track > .image {
   width: 40vmin;
   height: 56vmin;
   object-fit: cover;
+  object-position: 100% center;
   flex-shrink: 0;
+  transition: object-position 0.1s ease-out;
+}
+
+#image-track > .image:hover {
+  transform: scale(1.02);
 }
 
 .image.expanded {
-  position: fixed;
-  top: 50%;
-  left: 50%;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
   transform: translate(-50%, -50%) !important;
   width: 80vw !important;
   height: 80vh !important;
   z-index: 1000;
   object-fit: contain !important;
+  cursor: pointer;
 }
 
 .overlay {
@@ -51,6 +58,7 @@ body {
 .overlay.active {
   opacity: 1;
   pointer-events: all;
+  cursor: pointer;
 }
 
 /*.meta-link {
