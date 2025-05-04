@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --coral: #e89082;
+            --forest: #3b574f;
+            --ocean: #4e83aa;
+            --lavender: #c1c2e4;
+            --sand: #dcc6be;
+            --c-grey: #c0b8b2;
+        }
+
+        .footer {
+            background: var(--forest);
+            color: white;
+            height:100%;
+            padding: 60px 20px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-section {
+            padding: 0 20px;
+        }
+
+        .footer-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--coral);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--coral);
+        }
+
+        .footer-contact p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--coral);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Decorative elements */
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--coral), var(--lavender));
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                padding: 40px 15px 30px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .footer-section {
+                padding: 0 10px;
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">The Magnet</h3>
+                <p>Exploring creativity, culture, and artistic expression through our unique lens.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Instagram">📷</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="Facebook">👥</a>
+                    <a href="#" aria-label="LinkedIn">💼</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3 class="footer-title">Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="literature.html">Literature</a></li>
+                    <li><a href="film.html">Film</a></li>
+                    <li><a href="arttest.html">Art</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3 class="footer-title">Contact</h3>
+                <div class="footer-contact">
+                    <p>Email: contact@themagnet.com</p>
+                    <p>Phone: (123) 456-7890</p>
+                    <p>Address: 123 Creative Ave,<br>Artstown, AT 12345</p>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3 class="footer-title">Newsletter</h3>
+                <p>Subscribe to our newsletter for updates on new content and events.</p>
+                <form style="margin-top: 15px;">
+                    <input type="email" placeholder="Enter your email" 
+                           style="padding: 8px; width: 100%; margin-bottom: 10px; border: none; border-radius: 4px;">
+                    <button type="submit" 
+                            style="background: var(--coral); color: white; border: none; padding: 8px 20px; 
+                                   border-radius: 4px; cursor: pointer; width: 100%;">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 The Magnet. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add this script to your pages to load the footer
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    const footerContent = document.createElement('div');
+                    footerContent.innerHTML = data;
+                    document.body.appendChild(footerContent);
+                })
+                .catch(error => console.error('Error loading footer:', error));
+        });
+    </script>
+</body>
+</html>

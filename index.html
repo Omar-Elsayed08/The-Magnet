@@ -1,497 +1,1496 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
+
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wander - Literary Arts Magazine</title>
-    <link href="styles.css" rel='stylesheet'>
 
-    <style>
-        :root {
-            --coral: #e89082;
-            --forest: #3b574f;
-            --ocean: #4e83aa;
-            --lavender: #c1c2e4;
-            --sand: #dcc6be;
-            --c-grey: #c0b8b2;
-        }
+<meta charset="UTF-8">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            background-color: var(--sand);
-            color: var(--forest);
-            overflow-x: hidden;
-        }
+<title>Wander - Literary Arts Magazine</title>
 
-        /* Trail Path */
-        .trail-path {
-            position: absolute;
-            top: 0;
-            left: 50px;
-            width: 6px;
-            height: 100%;
-            background: var(--coral);
-            z-index: 1;
-        }
 
-        .trail-dot {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: var(--ocean);
-            border-radius: 50%;
-            left: -7px;
-            transform: translateX(-50%);
-            z-index: 2;
-            box-shadow: 0 0 15px rgba(78, 131, 170, 0.6);
-        }
 
-        /* Hero Section */
-        .hero {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+<style>
 
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(193, 194, 228, 0.3), rgba(59, 87, 79, 0.5));
-            z-index: 1;
-        }
+:root {
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            max-width: 800px;
-            padding: 0 20px;
-        }
+--coral: #e89082;
 
-        .hero-title {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            color: var(--forest);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-weight: 900;
-            text-shadow: 4px 4px 4px rgb(61, 59, 57);
-            font-family: 'Bestie Seventy', sans-serif !important;
-        }
+--forest: #3b574f;
 
-        .hero-subtitle {
-            font-size: 1.5rem;
-            margin-bottom: 40px;
-            color: var(--forest);
-            font-weight: 300;
-        }
+--ocean: #4e83aa;
 
-        .hero-button {
-            padding: 12px 30px;
-            background-color: var(--coral);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(232, 144, 130, 0.5);
-        }
+--lavender: #c1c2e4;
 
-        .hero-button:hover {
-            background-color: var(--ocean);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(78, 131, 170, 0.6);
-        }
+--sand: #dcc6be;
 
-        /* Navigation */
-        .et-hero-tabs {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            background: var(--sand);
-            width: 100%;
-        }
+/* Added a grey color used in #team section background */
 
-        .et-hero-tabs-container {
-            display: flex;
-            flex-direction: row;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 70px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            background: var(--forest);
-            z-index: 10;
-            transition: all 0.3s ease;
-        }
+--c-grey: #f0f0f0;
 
-        .et-hero-tabs-container--top {
-            position: fixed;
-            top: 0;
-            bottom: auto;
-        }
+/* Adjust this color as needed */
 
-        .et-hero-tab {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex: 1;
-            color: white;
-            letter-spacing: 0.1rem;
-            transition: all 0.3s ease;
-            font-size: 0.8rem;
-            text-decoration: none;
-            height: 100%;
-        }
+}
 
-        .et-hero-tab:hover {
-            color: var(--lavender);
-            background: rgba(78, 131, 170, 0.1);
-        }
 
-        .et-hero-tab.active {
-            color: var(--coral);
-            font-weight: 600;
-        }
 
-        .et-hero-tab-slider {
-            position: absolute;
-            bottom: 0;
-            width: 0;
-            height: 3px;
-            background: var(--coral);
-            transition: all 0.3s ease;
-        }
+* {
 
-        .mobile-menu-btn {
-            display: none;
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 30px;
-            height: 25px;
-            cursor: pointer;
-            z-index: 100;
-        }
+margin: 0;
 
-        .mobile-menu-btn span {
-            position: absolute;
-            height: 3px;
-            width: 100%;
-            background: white;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
+padding: 0;
 
-        .mobile-menu-btn span:nth-child(1) {
-            top: 0;
-        }
+box-sizing: border-box;
 
-        .mobile-menu-btn span:nth-child(2) {
-            top: 10px;
-        }
+}
 
-        .mobile-menu-btn span:nth-child(3) {
-            top: 20px;
-        }
 
-        .mobile-menu-btn.active span:nth-child(1) {
-            transform: rotate(45deg) translate(7px, 7px);
-        }
 
-        .mobile-menu-btn.active span:nth-child(2) {
-            opacity: 0;
-        }
+body {
 
-        .mobile-menu-btn.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
+background-color: var(--sand);
 
-        /* Floating elements */
-        .floating {
-            position: absolute;
-            background: var(--lavender);
-            opacity: 0.3;
-            border-radius: 50%;
-            z-index: 0;
-            animation: float 15s ease-in-out infinite;
-        }
+color: var(--forest);
 
-        .floating:nth-child(1) {
-            width: 150px;
-            height: 150px;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-            background: var(--coral);
-        }
+overflow-x: hidden;
 
-        .floating:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            top: 60%;
-            left: 80%;
-            animation-delay: -2s;
-            animation-duration: 18s;
-            background: var(--ocean);
-        }
+}
 
-        .floating:nth-child(3) {
-            width: 100px;
-            height: 100px;
-            top: 30%;
-            left: 80%;
-            animation-delay: -5s;
-            animation-duration: 12s;
-            background: var(--lavender);
-        }
 
-        .floating:nth-child(4) {
-            width: 80px;
-            height: 80px;
-            top: 70%;
-            left: 20%;
-            animation-delay: -7s;
-            animation-duration: 20s;
-            background: var(--forest);
-        }
 
-        @keyframes float {
-            0% {
-                transform: translate(0, 0);
-            }
+/* --- Route/Trail Styles --- */
 
-            50% {
-                transform: translate(-20px, -20px);
-            }
+.route {
 
-            100% {
-                transform: translate(0, 0);
-            }
-        }
+position: absolute;
 
-        /* Sections */
-        section {
-            position: relative;
-            min-height: 100vh;
-            padding: 100px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+/* Changed back from fixed */
 
-        .section-content {
-            max-width: 1000px;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
+top: 0;
 
-        .section-title {
-            font-size: 3rem;
-            margin-bottom: 30px;
-            color: var(--forest);
-        }
+left: 0;
 
-        .section-text {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            margin-bottom: 30px;
-            color: var(--forest);
-        }
+width: 100%;
 
-        #about {
-            background-color: var(--sand);
-        }
+/* Full width of parent */
 
-        #submissions {
-            background-color: var(--lavender);
-        }
+height: 100%;
 
-        #team {
-            background-color: var(--c-grey);
-        }
+/* Needs to be tall enough for the SVG path - might need adjustment */
 
-        #contact {
-            background-color: var(--ocean);
-            color: white;
-        }
+/* Or set height dynamically via JS if needed */
 
-        #contact .section-title,
-        #contact .section-text {
-            color: white;
-        }
+pointer-events: none;
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 3rem;
-            }
+z-index: 5;
 
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
+/* Adjust if needed based on other content */
 
-            .et-hero-tabs-container {
-                flex-direction: column;
-                height: auto;
-                max-height: 0;
-                overflow: hidden;
-                position: fixed;
-                top: 0;
-                width: 100%;
-            }
+overflow: visible;
 
-            .et-hero-tabs-container--top {
-                height: auto;
-            }
+/* Allow SVG to overflow if needed, or hidden if clipping */
 
-            .et-hero-tabs-container.mobile-menu-open {
-                max-height: 300px;
-            }
+}
 
-            .et-hero-tab {
-                padding: 15px 0;
-            }
 
-            .mobile-menu-btn {
-                display: block;
-            }
 
-            .trail-path {
-                left: 30px;
-            }
-        }
-        @font-face {
-            font-family: 'Bestie Seventy';
-            src: url('styles/Bestie Seventy.ttf') format('truetype');
-            font-display: swap !important;
-        }
-    </style>
+.route svg {
+
+position: absolute;
+
+top: 0;
+
+left: 0;
+
+width: 100%;
+
+height: 100%;
+
+/* SVG scales within the container */
+
+/* overflow: visible; */
+
+/* Typically not needed on SVG element itself */
+
+}
+
+
+
+/* Style the VISIBLE dashed path (remains the same) */
+
+.route svg path.dashed {
+
+fill: none;
+
+stroke-width: 4;
+
+stroke-linecap: round;
+
+stroke-dasharray: 8 8;
+
+/* Visual dashes */
+
+stroke: var(--forest);
+
+/* Visible color */
+
+}
+
+
+
+/* Style the path INSIDE the mask (remains the same) */
+
+.route svg mask path.mask-path {
+
+fill: none;
+
+stroke: white;
+
+/* Mask requires white */
+
+stroke-width: 5;
+
+stroke-linecap: round;
+
+/* JS controls dasharray/dashoffset */
+
+}
+
+
+
+/* Media query for mobile/desktop swap (remains the same) */
+
+@media (max-width: 768px) {
+
+/* ... */
+
+}
+
+
+
+/* --- End Route/Trail Styles --- */
+
+
+
+/* Hero Section */
+
+.hero {
+
+position: relative;
+
+height: 100vh;
+
+width: 100%;
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+overflow: hidden;
+
+/* Keep content within hero bounds */
+
+}
+
+
+
+.hero-overlay {
+
+position: absolute;
+
+top: 0;
+
+left: 0;
+
+width: 100%;
+
+height: 100%;
+
+background: linear-gradient(135deg, rgba(193, 194, 228, 0.3), rgba(59, 87, 79, 0.5));
+
+z-index: 1;
+
+}
+
+
+
+.hero-content {
+
+position: relative;
+
+z-index: 2;
+
+/* Above overlay */
+
+text-align: center;
+
+max-width: 800px;
+
+padding: 0 20px;
+
+}
+
+
+
+.hero-title {
+
+font-size: 5rem;
+
+margin-bottom: 20px;
+
+color: var(--forest);
+
+letter-spacing: 1px;
+
+text-transform: uppercase;
+
+font-weight: 900;
+
+text-shadow: 4px 4px 4px rgb(61, 59, 57);
+
+font-family: 'Bestie Seventy', sans-serif !important;
+
+}
+
+
+
+.hero-subtitle {
+
+font-size: 1.5rem;
+
+margin-bottom: 40px;
+
+color: var(--forest);
+
+font-weight: 300;
+
+}
+
+
+
+.hero-button {
+
+padding: 12px 30px;
+
+background-color: var(--coral);
+
+color: white;
+
+border: none;
+
+border-radius: 30px;
+
+font-size: 1.2rem;
+
+cursor: pointer;
+
+transition: all 0.3s ease;
+
+text-decoration: none;
+
+display: inline-block;
+
+font-weight: 600;
+
+box-shadow: 0 4px 15px rgba(232, 144, 130, 0.5);
+
+}
+
+
+
+.hero-button:hover {
+
+background-color: var(--ocean);
+
+transform: translateY(-3px);
+
+box-shadow: 0 6px 20px rgba(78, 131, 170, 0.6);
+
+}
+
+
+
+/* Navigation */
+
+.et-hero-tabs {
+
+display: flex;
+
+flex-direction: column;
+
+position: relative;
+
+/* Needed for container positioning */
+
+background: var(--sand);
+
+/* Or transparent if it overlaps */
+
+width: 100%;
+
+/* Removed height: 100vh - sections define height */
+
+}
+
+
+
+.et-hero-tabs-container {
+
+display: flex;
+
+flex-direction: row;
+
+position: absolute;
+
+/* Attached to bottom of .et-hero-tabs initially */
+
+bottom: 0;
+
+width: 100%;
+
+height: 70px;
+
+box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+
+background: var(--forest);
+
+z-index: 10;
+
+/* Above trail and hero content */
+
+transition: all 0.3s ease;
+
+}
+
+
+
+.et-hero-tabs-container--top {
+
+position: fixed;
+
+/* Sticks to top when scrolled */
+
+top: 0;
+
+bottom: auto;
+
+}
+
+
+
+.et-hero-tab {
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+flex: 1;
+
+color: white;
+
+letter-spacing: 0.1rem;
+
+transition: all 0.3s ease;
+
+font-size: 0.8rem;
+
+text-decoration: none;
+
+height: 100%;
+
+}
+
+
+
+.et-hero-tab:hover {
+
+color: var(--lavender);
+
+background: rgba(78, 131, 170, 0.1);
+
+}
+
+
+
+.et-hero-tab.active {
+
+color: var(--coral);
+
+font-weight: 600;
+
+}
+
+
+
+.et-hero-tab-slider {
+
+position: absolute;
+
+bottom: 0;
+
+width: 0;
+
+/* JS will set width */
+
+height: 3px;
+
+background: var(--coral);
+
+transition: all 0.3s ease;
+
+}
+
+
+
+.mobile-menu-btn {
+
+display: none;
+
+/* Hidden by default */
+
+position: absolute;
+
+top: 15px;
+
+/* Position within the nav container */
+
+right: 15px;
+
+width: 30px;
+
+height: 25px;
+
+cursor: pointer;
+
+z-index: 100;
+
+/* Above nav items */
+
+background: none;
+
+/* Ensure no background interferes */
+
+border: none;
+
+}
+
+
+
+.mobile-menu-btn span {
+
+position: absolute;
+
+left: 0;
+
+/* Ensure spans align left */
+
+height: 3px;
+
+width: 100%;
+
+background: white;
+
+/* Color of the burger icon lines */
+
+border-radius: 3px;
+
+transition: all 0.3s ease;
+
+}
+
+
+
+.mobile-menu-btn span:nth-child(1) {
+
+top: 0;
+
+}
+
+
+
+.mobile-menu-btn span:nth-child(2) {
+
+top: 10px;
+
+}
+
+
+
+.mobile-menu-btn span:nth-child(3) {
+
+top: 20px;
+
+}
+
+
+
+.mobile-menu-btn.active span:nth-child(1) {
+
+transform: rotate(45deg) translate(7px, 7px);
+
+}
+
+
+
+.mobile-menu-btn.active span:nth-child(2) {
+
+opacity: 0;
+
+}
+
+
+
+.mobile-menu-btn.active span:nth-child(3) {
+
+transform: rotate(-45deg) translate(7px, -7px);
+
+}
+
+
+
+
+
+/* Floating elements */
+
+.floating {
+
+position: absolute;
+
+background: var(--lavender);
+
+/* Default background */
+
+opacity: 0.3;
+
+border-radius: 50%;
+
+z-index: 0;
+
+/* Behind hero content */
+
+animation: float 15s ease-in-out infinite;
+
+}
+
+
+
+.floating:nth-child(1) {
+
+width: 150px;
+
+height: 150px;
+
+top: 10%;
+
+left: 10%;
+
+animation-delay: 0s;
+
+background: var(--coral);
+
+}
+
+
+
+.floating:nth-child(2) {
+
+width: 200px;
+
+height: 200px;
+
+top: 60%;
+
+left: 80%;
+
+animation-delay: -2s;
+
+animation-duration: 18s;
+
+background: var(--ocean);
+
+}
+
+
+
+.floating:nth-child(3) {
+
+width: 100px;
+
+height: 100px;
+
+top: 30%;
+
+left: 80%;
+
+animation-delay: -5s;
+
+animation-duration: 12s;
+
+background: var(--lavender);
+
+}
+
+
+
+.floating:nth-child(4) {
+
+width: 80px;
+
+height: 80px;
+
+top: 70%;
+
+left: 20%;
+
+animation-delay: -7s;
+
+animation-duration: 20s;
+
+background: var(--forest);
+
+}
+
+
+
+@keyframes float {
+
+0% {
+
+transform: translate(0, 0);
+
+}
+
+
+
+50% {
+
+transform: translate(-20px, -20px);
+
+}
+
+
+
+100% {
+
+transform: translate(0, 0);
+
+}
+
+}
+
+
+
+/* Sections */
+
+section {
+
+position: relative;
+
+min-height: 100vh;
+
+/* Ensure sections take up height */
+
+padding: 100px 20px;
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+/* Sections need their own background colors */
+
+}
+
+
+
+.section-content {
+
+max-width: 1000px;
+
+text-align: center;
+
+position: relative;
+
+z-index: 2;
+
+/* Above potential section backgrounds/effects */
+
+}
+
+
+
+.section-title {
+
+font-size: 3rem;
+
+margin-bottom: 30px;
+
+color: var(--forest);
+
+/* Default title color */
+
+}
+
+
+
+.section-text {
+
+font-size: 1.2rem;
+
+line-height: 1.8;
+
+margin-bottom: 30px;
+
+color: var(--forest);
+
+/* Default text color */
+
+}
+
+
+
+#about {
+
+background-color: var(--sand);
+
+}
+
+
+
+#submissions {
+
+background-color: var(--lavender);
+
+}
+
+
+
+#team {
+
+background-color: var(--c-grey);
+
+}
+
+
+
+/* Used defined grey */
+
+#contact {
+
+background-color: var(--ocean);
+
+}
+
+
+
+/* Specific overrides for contrast */
+
+#contact .section-title,
+
+#contact .section-text {
+
+color: white;
+
+}
+
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+
+.hero-title {
+
+font-size: 3rem;
+
+}
+
+
+
+.hero-subtitle {
+
+font-size: 1.2rem;
+
+}
+
+
+
+.et-hero-tabs-container {
+
+flex-direction: column;
+
+height: auto;
+
+/* Height determined by content */
+
+max-height: 0;
+
+/* Collapsed by default */
+
+overflow: hidden;
+
+position: fixed;
+
+/* Mobile menu should be fixed */
+
+top: 0;
+
+/* Stick to top */
+
+width: 100%;
+
+/* background: var(--forest); Already set */
+
+/* z-index: 10; Already set */
+
+/* transition: max-height 0.3s ease; Added for smooth opening */
+
+}
+
+
+
+/* Remove --top modifier adjustments specific to desktop */
+
+.et-hero-tabs-container--top {
+
+/* No special style needed if it's always fixed */
+
+}
+
+
+
+.et-hero-tabs-container.mobile-menu-open {
+
+max-height: 300px;
+
+/* Allow space for tabs */
+
+}
+
+
+
+.et-hero-tab {
+
+padding: 15px 0;
+
+/* Vertical padding for mobile tabs */
+
+width: 100%;
+
+/* Ensure tabs take full width */
+
+}
+
+
+
+.et-hero-tab-slider {
+
+display: none;
+
+/* Slider usually not needed in mobile dropdown */
+
+}
+
+
+
+.mobile-menu-btn {
+
+display: block;
+
+/* Show burger icon on mobile */
+
+/* Ensure it's positioned relative to the fixed container */
+
+position: fixed;
+
+top: 15px;
+
+right: 15px;
+
+z-index: 11;
+
+/* Above the menu container itself */
+
+}
+
+
+
+/* Ensure sections have enough padding on mobile */
+
+section {
+
+padding: 80px 15px;
+
+}
+
+
+
+.section-title {
+
+font-size: 2.5rem;
+
+}
+
+
+
+.section-text {
+
+font-size: 1.1rem;
+
+}
+
+}
+
+
+
+/* Font Face - Keep this clean */
+
+@font-face {
+
+font-family: 'Bestie Seventy';
+
+src: url('styles/Bestie Seventy.ttf') format('truetype');
+
+font-display: swap !important;
+
+}
+
+</style>
+
 </head>
 
-<body>
-    <!-- Trail Path -->
-    <div class="trail-path">
-        <div class="trail-dot" id="trailDot"></div>
-    </div>
-
-    <!-- Hero Section -->
-    <div class="hero">
-        <div id="Render"></div>
-
-        <div class="floating"></div>
-        <div class="floating"></div>
-        <div class="floating"></div>
-        <div class="floating"></div>
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1 class="hero-title">The Magnet</h1>
-            <p class="hero-subtitle">A Literary Arts Magazine Exploring Paths Unseen</p>
-            <a href="#about" class="hero-button">Begin Journey</a>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <div id="Navbar"></div>
 
 
 
-   
 
-    <!-- Sections -->
-    <section id="about">
-        <div class="section-content">
-            <h2 class="section-title">About Wander</h2>
-            <p class="section-text">Wander is a student-led literary arts magazine exploring themes of journey,
-                discovery, and the unknown paths we take. Through poetry, prose, photography, and visual arts, we invite
-                you to explore the meanderings of creative expression.</p>
-        </div>
-    </section>
+<<body>
 
-    <section id="submissions">
-        <div class="section-content">
-            <h2 class="section-title">Submissions</h2>
-            <p class="section-text">We welcome submissions from students and faculty. Whether you're a writer,
-                photographer, painter, or digital artist, there's a place for your work in our pages. Share your
-                perspective on wandering through the literal and metaphorical landscapes of life.</p>
-        </div>
-    </section>
+<div class="route">
 
-    <section id="team">
-        <div class="section-content">
-            <h2 class="section-title">Our Team</h2>
-            <p class="section-text">Meet the wanderers behind the magazine - passionate students dedicated to curating
-                and presenting the best creative works from our community.</p>
-        </div>
-    </section>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 
-    <section id="contact">
-        <div class="section-content">
-            <h2 class="section-title">Contact Us</h2>
-            <p class="section-text">Have questions or want to join our team? Reach out to us and become part of our
-                wandering community.</p>
-        </div>
-    </section>
+viewBox="0 0 1791 843" style="enable-background:new 0 0 1791 843;" xml:space="preserve"
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        fetch('navbar2.html')
-            .then(response => response.text())
-            .then(data => {
-                const content = document.getElementById('Navbar');
-                content.innerHTML = data;
+preserveAspectRatio="xMidYMin meet">
 
-                // Execute any scripts in the loaded navbar
-                content.querySelectorAll('script').forEach(script => {
-                    const newScript = document.createElement('script');
-                    newScript.textContent = script.textContent;
-                    document.body.appendChild(newScript);
-                });
+<defs>
 
-                // Initialize the navigation AFTER the navbar is loaded
-                initializeNavigation();
-            })
-            .catch(error => console.error('Error loading the HTML file:', error));
-    </script>
-    <!--
-     <script>
-        fetch('3dtest.html')
-            .then(response => response.text())
-            .then(data => {
-                const content = document.getElementById('Render');
-                content.innerHTML = data;
+<mask id="trailMaskDesktop">
 
-                // Execute any scripts in the loaded navbar
-                content.querySelectorAll('script').forEach(script => {
-                    const newScript = document.createElement('script');
-                    newScript.textContent = script.textContent;
-                    document.body.appendChild(newScript);
-                });
+<path class="mask-path" stroke="white" /* Mask effect requires white */ stroke-width="5" /* Needs
 
-                // Initialize the navigation AFTER the navbar is loaded
-                initializeNavigation();
-            })
-            .catch(error => console.error('Error loading the HTML file:', error));
-    </script>
--->
+sufficient width */ stroke-linecap="round" fill="none" /* The 'd' attribute MUST be IDENTICAL to
+
+the visible path below */
+
+d="M884.6,0c4.1,95.5,25.7,126.3,139.3,228.8c198.2,178.9,206.3,411-116,520.6c-14.9,5-33.6,11.7-54.4,20 c-41.9,16.8-91.9,40.6-133.9,72.4c-0.5,0.4-1,0.8-1.5,1.2">
+
+</path>
+
+</mask>
+
+</defs>
+
+<path class="dashed" mask="url(#trailMaskDesktop)" /* The 'd' attribute MUST be IDENTICAL to the mask path
+
+above */
+
+d="M884.6,0c4.1,95.5,25.7,126.3,139.3,228.8c198.2,178.9,206.3,411-116,520.6c-14.9,5-33.6,11.7-54.4,20 c-41.9,16.8-91.9,40.6-133.9,72.4c-0.5,0.4-1,0.8-1.5,1.2">
+
+</path>
+
+</svg>
+
+
+
+<svg class="mobile" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+
+x="0px" y="0px" viewBox="0 0 376 706" style="enable-background:new 0 0 376 706;" xml:space="preserve"
+
+preserveAspectRatio="xMidYMin meet">
+
+<defs>
+
+<mask id="trailMaskMobile">
+
+<path class="mask-path" stroke="white" /* Mask effect requires white */ stroke-width="5" /* Needs
+
+sufficient width */ stroke-linecap="round" fill="none" /* The 'd' attribute MUST be IDENTICAL to
+
+the visible path below */
+
+d="M175.9,0.5c-1.1,94.5,1.5,120.9,66.9,213.4c53.6,56.5,141,189.3,61.8,268.6C205.4,581.6,150,580,93.5,653.6 c-13.5,17.6-19.4,34.9-18.9,51.6">
+
+</path>
+
+</mask>
+
+</defs>
+
+<path class="dashed" mask="url(#trailMaskMobile)" /* The 'd' attribute MUST be IDENTICAL to the mask path
+
+above */
+
+d="M175.9,0.5c-1.1,94.5,1.5,120.9,66.9,213.4c53.6,56.5,141,189.3,61.8,268.6C205.4,581.6,150,580,93.5,653.6 c-13.5,17.6-19.4,34.9-18.9,51.6">
+
+</path>
+
+</svg>
+
+
+
+</div>
+
+
+
+
+
+<!-- Hero Section -->
+
+<div class="hero">
+
+<div id="Render"></div>
+
+
+
+<div class="floating"></div>
+
+<div class="floating"></div>
+
+<div class="floating"></div>
+
+<div class="floating"></div>
+
+<div class="hero-overlay"></div>
+
+<div class="hero-content">
+
+<h1 class="hero-title">The Magnet</h1>
+
+<p class="hero-subtitle">A Literary Arts Magazine Exploring Paths Unseen</p>
+
+<a href="#about" class="hero-button">Begin Journey</a>
+
+</div>
+
+</div>
+
+
+
+<!-- Navigation -->
+
+<div id="Navbar"></div>
+
+
+
+<!-- Sections -->
+
+<section id="about">
+
+<div class="section-content">
+
+<h2 class="section-title">About Wander</h2>
+
+<p class="section-text">Wander is a student-led literary arts magazine exploring themes of journey,
+
+discovery, and the unknown paths we take. Through poetry, prose, photography, and visual arts, we
+
+invite
+
+you to explore the meanderings of creative expression.</p>
+
+</div>
+
+</section>
+
+
+
+<section id="submissions">
+
+<div class="section-content">
+
+<h2 class="section-title">Submissions</h2>
+
+<p class="section-text">We welcome submissions from students and faculty. Whether you're a writer,
+
+photographer, painter, or digital artist, there's a place for your work in our pages. Share your
+
+perspective on wandering through the literal and metaphorical landscapes of life.</p>
+
+</div>
+
+</section>
+
+
+
+<section id="team">
+
+<div class="section-content">
+
+<h2 class="section-title">Our Team</h2>
+
+<p class="section-text">Meet the wanderers behind the magazine - passionate students dedicated to
+
+curating
+
+and presenting the best creative works from our community.</p>
+
+</div>
+
+</section>
+
+
+
+<section id="contact">
+
+<div class="section-content">
+
+<h2 class="section-title">Contact Us</h2>
+
+<p class="section-text">Have questions or want to join our team? Reach out to us and become part of our
+
+wandering community.</p>
+
+</div>
+
+</section>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+<script>
+
+fetch('navbar2.html')
+
+.then(response => response.text())
+
+.then(data => {
+
+const content = document.getElementById('Navbar');
+
+content.innerHTML = data;
+
+content.querySelectorAll('script').forEach(script => {
+
+const newScript = document.createElement('script');
+
+newScript.textContent = script.textContent;
+
+document.body.appendChild(newScript);
+
+});
+
+initializeNavigation();
+
+})
+
+.catch(error => console.error('Error loading the HTML file:', error));
+
+</script>
+
+<script>
+
+// Canvas particle animation
+
+const canvas = document.createElement('canvas');
+
+const ctx = canvas.getContext('2d');
+
+document.getElementById('Render').appendChild(canvas);
+
+canvas.style.position = 'absolute';
+
+canvas.style.top = 0;
+
+canvas.style.left = 0;
+
+canvas.style.zIndex = 0;
+
+
+
+function resizeCanvas() {
+
+canvas.width = window.innerWidth;
+
+canvas.height = window.innerHeight;
+
+}
+
+window.addEventListener('resize', resizeCanvas);
+
+resizeCanvas();
+
+const particles = [];
+
+const particleCount = 100;
+
+for (let i = 0; i < particleCount; i++) {
+
+particles.push({
+
+angle: Math.random() * Math.PI * 2,
+
+radius: 50 + Math.random() * 200,
+
+speed: 0.01 + Math.random() * 0.02,
+
+size: 2 + Math.random() * 3,
+
+color: `hsl(${Math.random() * 360}, 60%, 70%)`,
+
+centerX: window.innerWidth / 2,
+
+centerY: window.innerHeight / 2
+
+});
+
+}
+
+
+
+function animate() {
+
+ctx.fillStyle = 'rgba(220, 198, 190, 0.08)';
+
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+particles.forEach(p => {
+
+p.angle += p.speed;
+
+const x = p.centerX + Math.cos(p.angle) * p.radius;
+
+const y = p.centerY + Math.sin(p.angle) * p.radius;
+
+ctx.beginPath();
+
+ctx.arc(x, y, p.size, 0, Math.PI * 2);
+
+ctx.fillStyle = p.color;
+
+ctx.fill();
+
+});
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+
+</script>
+
+<script>
+
+/**
+
+* Animates a visible segment of a dashed SVG path (within a scrolling container)
+
+* using an SVG mask and driven by Lenis smooth scroll library for better synchronization.
+
+*/
+
+document.addEventListener('DOMContentLoaded', () => {
+
+// --- Lenis Setup ---
+
+const lenis = new Lenis();
+
+
+// Integrate Lenis scroll updates into its own rAF loop
+
+function raf(time) {
+
+lenis.raf(time);
+
+requestAnimationFrame(raf);
+
+}
+
+requestAnimationFrame(raf);
+
+// --- End Lenis Setup ---
+
+
+
+// --- SVG Path Animation Setup ---
+
+const desktopPathSelector = '.route svg:not(.mobile) mask path.mask-path';
+
+const mobilePathSelector = '.route svg.mobile mask path.mask-path';
+
+const segmentLength = 2000; // Adjust this value if needed
+
+
+const pathsToAnimate = []; // Holds { element, length, segment }
+
+
+function preparePath(selector) {
+
+const pathElement = document.querySelector(selector);
+
+if (pathElement) {
+
+// No need for separate rAF here, DOMContentLoaded is usually sufficient
+
+try {
+
+const svgParent = pathElement.closest('svg');
+
+// No initial display check needed here, update function handles it.
+
+const length = pathElement.getTotalLength();
+
+if (length === 0) { console.warn(`Mask path length 0: ${selector}`); return; }
+
+
+const pathData = { element: pathElement, length: length, segment: segmentLength };
+
+pathsToAnimate.push(pathData);
+
+initializePath(pathData);
+
+
+} catch (e) { console.error("Err processing mask path:", e, selector); }
+
+} else { console.log(`Mask path not found: ${selector}`); }
+
+}
+
+
+// --- Initialization and Update Functions ---
+
+function initializePath(pathData) {
+
+if (!pathData || !pathData.element) return;
+
+const totalLength = pathData.length;
+
+const segment = pathData.segment;
+
+pathData.element.style.strokeDasharray = `${segment} ${totalLength}`;
+
+pathData.element.style.strokeDashoffset = totalLength; // Start hidden
+
+pathData.element.style.visibility = 'visible';
+
+}
+
+
+// This function updates SVG styles, called by Lenis event
+
+function updateAnimation(lenisInstance) {
+
+// Use scroll progress directly from Lenis (value between 0 and 1)
+
+// Note: lenisInstance.progress gives vertical scroll progress.
+
+// Ensure this matches your path's orientation/intent.
+
+const scrollPercentage = lenisInstance.progress;
+
+
+pathsToAnimate.forEach(pathData => {
+
+const svgParent = pathData.element.closest('svg');
+
+// Check visibility *during* update, handles media query changes
+
+if (svgParent && window.getComputedStyle(svgParent).display !== 'none') {
+
+const totalLength = pathData.length;
+
+const segment = pathData.segment;
+
+const currentHeadPosition = totalLength * scrollPercentage;
+
+const offset = totalLength - currentHeadPosition + segment;
+
+
+// Apply styles
+
+pathData.element.style.strokeDasharray = `${segment} ${totalLength}`;
+
+pathData.element.style.strokeDashoffset = offset;
+
+}
+
+});
+
+}
+
+
+// Resize handler
+
+function onResize() {
+
+// Re-prepare paths (length might not change, but good practice)
+
+pathsToAnimate.length = 0;
+
+preparePath(desktopPathSelector);
+
+preparePath(mobilePathSelector);
+
+// Trigger an update immediately after resize prep
+
+// Get current progress from lenis instance if available, otherwise use window scroll
+
+const currentProgress = lenis ? lenis.progress : (window.scrollY || window.pageYOffset) / (document.documentElement.scrollHeight - window.innerHeight);
+
+updateAnimation({ progress: currentProgress }); // Pass a mock object if lenis not ready? Better to update within lenis loop.
+
+}
+
+
+// --- Execution ---
+
+preparePath(desktopPathSelector);
+
+preparePath(mobilePathSelector);
+
+
+const pathCheck = document.querySelector('.route mask path.mask-path');
+
+if (pathCheck) {
+
+// Hook into Lenis' scroll event for updates
+
+lenis.on('scroll', updateAnimation);
+
+window.addEventListener('resize', onResize, { passive: true });
+
+console.log(`Lenis-driven SVG mask path segment animation attached.`);
+
+// Initial draw based on current state
+
+updateAnimation(lenis);
+
+
+} else {
+
+console.error("Mask path animation could not initialize.");
+
+}
+
+});
+
+</script>
+
 </body>
+
+
 
 </html>

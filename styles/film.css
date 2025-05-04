@@ -1,0 +1,64 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #3b574f;
+    color: rgb(255, 226, 226)
+}
+.heading {
+    text-align:center;
+    margin-top: 100px;
+    height:8rem;
+}
+.video-container {
+    max-width: 1700px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.row-1 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 5rem;
+}
+
+.row-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    width: 66.66%; /* Width of two columns from the first row */
+    margin: 0 auto;
+    margin-bottom: 5rem;
+     /* Shift right by half a column to align with middle video */
+}
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    background-color: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Responsive layout */
+@media (max-width: 1152px) {
+    .row-1, .row-2 {
+        grid-template-columns: 1fr;
+        width: 80%;
+        transform: none;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 2rem; 
+    }
+}

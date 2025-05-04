@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="styles/film.css" rel ='stylesheet'>
+    <title>Films</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            margin: 0;
+            min-height: 150vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        .heading {
+            text-align: center;
+            margin-top: 20vh;
+            margin-bottom: 5vh;
+            transform-origin: center;
+            transition: all 0.5s ease-out;
+        }
+        .video-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+        }
+        .video-title {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease-out;
+            font-size: 24px;
+            letter-spacing: 2px;
+            position: relative;
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+        }
+        .video-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .video-title.fixed {
+            position: fixed;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 1000;
+            padding: 15px 0;
+            margin: 0;
+        }
+        .video-container {
+            width: 30%;
+            position: relative;
+            padding-bottom: 16.875%;
+            transform-origin: top center;
+            transition: all 0.5s ease-out;
+            margin: 0 auto;
+        }
+        .video-container.expanded {
+            width: 80%;
+            top:0;
+            padding-bottom: 45%;
+            max-width: 1400px;
+            transform: translateY(-100px);
+        }
+        .video-container.fixed {
+            top:20%;    
+            position: fixed;
+            
+            /* Combined transform */
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .heading.scrolled {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        
+        /* Spacer for smooth scrolling */
+        .video-spacer {
+            height: 0;
+            transition: height 0.5s ease-out;
+        }
+        .video-spacer.expanded {
+            height: calc(45vw * 0.8);
+            max-height: calc(1400px * 0.5625);
+        }
+
+        @media screen and (max-width: 768px) {
+            .video-container {
+                width: 60%;
+                padding-bottom: 33.75%;
+            }
+            .video-container.expanded {
+                width: 90%;
+                padding-bottom: 50.625%;
+            }
+            .video-spacer.expanded {
+                height: calc(50.625vw * 0.9);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="heading">
+        <h1>The Magnet </h1>
+        <h1>Films</h1>
+    </div>
+    <div class="video-section">
+        <h2 class="video-title">Video 1</h2>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/sAQHr-pnrQo" 
+                    title="YouTube video" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+            </iframe>
+        </div>
+        <div class="video-spacer"></div>
+    </div>
+    <script>
+        let fixedTimeout;
+        
+        window.addEventListener('scroll', () => {
+            const heading = document.querySelector('.heading');
+            const videoTitle = document.querySelector('.video-title');
+            const videoContainer = document.querySelector('.video-container');
+            const videoSpacer = document.querySelector('.video-spacer');
+            const scrollPosition = window.scrollY;
+            
+            if (scrollPosition > 70) {
+                heading.classList.add('scrolled');
+                videoTitle.classList.add('visible', 'fixed');
+                videoContainer.classList.add('expanded');
+                videoSpacer.classList.add('expanded');
+                
+                // Clear any existing timeout
+                clearTimeout(fixedTimeout);
+                
+                // Add fixed position after scaling completes
+                 fixedTimeout = setTimeout(() => {
+                    if (scrollPosition > 70) {
+                        videoContainer.classList.add('fixed');
+                    }
+                }, 500);
+                
+            } else {
+                heading.classList.remove('scrolled');
+                videoTitle.classList.remove('visible', 'fixed');
+                videoContainer.classList.remove('expanded', 'fixed');
+                videoSpacer.classList.remove('expanded');
+                
+                // Clear the timeout if scrolling back up
+                clearTimeout(fixedTimeout);
+            }
+        });
+    </script>
+</body>
+</html>

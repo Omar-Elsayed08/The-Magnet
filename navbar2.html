@@ -38,23 +38,23 @@
         }
 
         .et-hero-tabs-container {
-            position: relative !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
             bottom: auto !important;
             background: #fff !important;
             display: flex !important;
             flex-direction: row !important;
-            position: absolute !important;
-            top: 0 !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
             width: 100% !important;
             height: 70px !important;
             box-shadow: 0 0 20px rgba(59, 87, 79, 0.15) !important;
-            z-index: 9999 !important;
+            z-index: 10000 !important;
             transition: all .5s ease !important;
             padding: 0 2rem !important;
             box-sizing: border-box !important;
+            backdrop-filter: blur(10px) !important;
+            background: rgba(255, 255, 255, 0.95) !important;
         }
 
         /* Mobile Menu Button */
@@ -242,6 +242,12 @@
                 padding: 0 1rem !important;
             }
 
+            .et-hero-tabs-container.mobile-menu-open {
+                height: auto !important;
+                max-height: 100vh !important;
+                background: rgba(255, 255, 255, 0.98) !important;
+            }
+
             .et-hero-tab {
                 display: none !important;
                 width: 100% !important;
@@ -256,18 +262,6 @@
             }
 
             .et-hero-tab.active {
-                display: flex !important;
-            }
-
-            .et-hero-tabs-container.mobile-menu-open {
-                flex-direction: column !important;
-                height: auto !important;
-                min-height: 70px !important;
-                max-height: 300px !important;
-                overflow-y: auto !important;
-            }
-
-            .et-hero-tabs-container.mobile-menu-open .et-hero-tab {
                 display: flex !important;
             }
 
@@ -332,10 +326,10 @@
                 <span></span>
             </button>
             <a class="et-hero-tab" href="index.html">Home</a>
-            <a class="et-hero-tab" href="#literature">Literature</a>
-            <a class="et-hero-tab" href="#film">Film</a>
-            <a class="et-hero-tab" href="#art">Art</a>
-            <a class="et-hero-tab" href="#about">About Us</a>
+            <a class="et-hero-tab" href="literature.html">Literature</a>
+            <a class="et-hero-tab" href="film.html">Film</a>
+            <a class="et-hero-tab" href="arttest.html">Art</a>
+            <a class="et-hero-tab" href="about.html">About Us</a>
             <span class="et-hero-tab-slider"></span>
         </div>
     </section>

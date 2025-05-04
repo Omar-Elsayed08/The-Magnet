@@ -4,28 +4,266 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Art Gallery</title>
-    <link rel="stylesheet" href="styles/arttest.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            cursor: default;
+            overflow-x: hidden;
+            height: 100vh;
+        }
+
+        #progress {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            font-size: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            z-index: 1000;
+            mix-blend-mode: difference;
+            color: white;
+        }
+
+        .image-track {
+            display: flex;
+            gap: 4vmin;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(0%, -50%); 
+            user-select: none;
+        }
+
+        .image {
+            width: 40vmin;
+            height: 56vmin;
+            object-fit: cover;
+            object-position: 100% center;
+            cursor: pointer;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 998;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .expanded-image-container {
+            position: fixed;
+            z-index: 999;
+            display: none;
+            transition: none;
+            transform-origin: top left;
+        }
+
+        .expanded-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-width: 800px;
+            max-height: 600px;
+        }
+
+        .close-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+    </style>
 </head>
 <body>
-    <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
-        
-            <img class="image" src="images/rose.jpg" draggable="false" />
-        
-            <img class="image" src="images/rose.jpg" draggable="false" />
-        
-            <img class="image" src="images/rose.jpg" draggable="false" />
-        
-            <img class="image" src="images/rose.jpg" draggable="false" />
-        
-            <img class="image" src="images/rose.jpg" draggable="false" />
-        
-            <img class="image" src="images/rose.jpg" draggable="false" />
-        
-            <img class="image" src="images/rose.jpg" draggable="false" />
-        
+    <div id="progress">0%</div>
+    <div class="overlay"></div>
+    <button class="close-button">×</button>
+    
+    <div class="expanded-image-container">
+        <img class="expanded-image" src="" alt="">
     </div>
 
-    <script src="scripts/arttest.js"></script>
+    <div class="image-track" data-mouse-down-at="0" data-prev-percentage="0">
+        <img class="image" src="./Magnet Art Images/IMG_6839__1_-removebg-preview 2.png" draggable="false" />
+        <img class="image" src="./Magnet Art Images/IMG_6841 (1) Background Removed 2.png" draggable="false" />
+        <img class="image" src="./Magnet Art Images/IMG_6842 (1) Background Removed 2.png" draggable="false" />
+        <img class="image" src="./Magnet Art Images/photo-output 2.png" draggable="false" />
+        <img class="image" src="./Magnet Art Images/photo-output 3.png" draggable="false" />
+        <img class="image" src="./Magnet Art Images/photo-output 4.png" draggable="false" />
+        <img class="image" src="./Magnet Art Images/photo-output 6.png" draggable="false" />
+        <img class="image" src="./Magnet Art Images/photo-output 7.png" draggable="false" />
+        <img class="image" src="./Magnet Art Images/photo-output.png" draggable="false" />
+    </div>
+
+    <script>
+        const track = document.querySelector(".image-track");
+        const progress = document.querySelector("#progress");
+        const overlay = document.querySelector(".overlay");
+        const closeButton = document.querySelector(".close-button");
+        const expandedContainer = document.querySelector(".expanded-image-container");
+        const expandedImage = document.querySelector(".expanded-image");
+        
+        let isExpanded = false;
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+
+        // Handle image click
+        document.querySelectorAll('.image').forEach(img => {
+            img.addEventListener('click', function(e) {
+                if (!isDragging) {
+                    const rect = this.getBoundingClientRect();
+                    
+                    // Set expanded image source
+                    expandedImage.src = this.src;
+                    
+                    // Calculate new dimensions (maintaining aspect ratio)
+                    const aspectRatio = rect.width / rect.height;
+                    let newWidth = Math.min(window.innerWidth * 0.6, 800); // 60% of viewport width or 800px
+                    let newHeight = newWidth / aspectRatio;
+                    
+                    // If height is too tall, scale down based on height
+                    if (newHeight > window.innerHeight * 0.8) {
+                        newHeight = window.innerHeight * 0.8;
+                        newWidth = newHeight * aspectRatio;
+                    }
+                    
+                    // Set initial size and position to match clicked image
+                    expandedContainer.style.left = `${rect.left}px`;
+                    expandedContainer.style.top = `${rect.top}px`;
+                    expandedContainer.style.width = `${rect.width}px`;
+                    expandedContainer.style.height = `${rect.height}px`;
+                    expandedContainer.style.display = 'block';
+                    
+                    // Force a reflow
+                    expandedContainer.offsetHeight;
+                    
+                    // Add transition for smooth animation
+                    expandedContainer.style.transition = 'all 0.3s ease';
+                    
+                    // Expand to calculated size while keeping the same position
+                    expandedContainer.style.width = `${newWidth}px`;
+                    expandedContainer.style.height = `${newHeight}px`;
+                    
+                    // Show overlay and close button
+                    overlay.classList.add('active');
+                    closeButton.style.display = 'flex';
+                    isExpanded = true;
+                    
+                    // Prevent scrolling
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        // Close expanded image
+        function closeExpandedImage() {
+            overlay.classList.remove('active');
+            closeButton.style.display = 'none';
+            expandedContainer.style.display = 'none';
+            isExpanded = false;
+            document.body.style.overflow = '';
+        }
+
+        closeButton.addEventListener('click', closeExpandedImage);
+        overlay.addEventListener('click', closeExpandedImage);
+
+        // Track mouse movement for drag detection
+        track.addEventListener('mousedown', e => {
+            startX = e.clientX;
+            startY = e.clientY;
+            isDragging = false;
+            if (!isExpanded) {
+                track.dataset.mouseDownAt = e.clientX;
+            }
+        });
+
+        track.addEventListener('mousemove', e => {
+            if (track.dataset.mouseDownAt === "0") return;
+            
+            const deltaX = Math.abs(e.clientX - startX);
+            const deltaY = Math.abs(e.clientY - startY);
+            
+            if (deltaX > 5 || deltaY > 5) {
+                isDragging = true;
+            }
+
+            const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX;
+            const maxDelta = window.innerWidth / 2;
+            const percentage = (mouseDelta / maxDelta) * -100;
+            const nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage;
+            const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+
+            track.dataset.percentage = nextPercentage;
+            
+            track.animate({
+                transform: `translate(${nextPercentage}%, -50%)`
+            }, { duration: 1200, fill: "forwards" });
+
+            for(const image of track.getElementsByClassName("image")) {
+                image.animate({
+                    objectPosition: `${100 + nextPercentage}% center`
+                }, { duration: 1200, fill: "forwards" });
+            }
+
+            progress.textContent = `${Math.abs(Math.round(nextPercentage))}%`;
+        });
+
+        track.addEventListener('mouseup', () => {
+            track.dataset.mouseDownAt = "0";
+            track.dataset.prevPercentage = track.dataset.percentage;
+        });
+
+        // Initialize
+        track.dataset.prevPercentage = "0";
+        track.dataset.percentage = "0";
+        progress.textContent = "0%";
+
+        // Handle wheel events
+        window.addEventListener('wheel', (e) => {
+            if (!isExpanded) {
+                e.preventDefault();
+                const delta = e.deltaY * 0.1;
+                const currentPercentage = parseFloat(track.dataset.percentage || 0);
+                let nextPercentage = currentPercentage - delta;
+                nextPercentage = Math.max(Math.min(nextPercentage, 0), -100);
+                
+                track.dataset.percentage = nextPercentage;
+                
+                track.animate({
+                    transform: `translate(${nextPercentage}%, -50%)`
+                }, { duration: 1200, fill: "forwards" });
+
+                for(const image of track.getElementsByClassName("image")) {
+                    image.animate({
+                        objectPosition: `${100 + nextPercentage}% center`
+                    }, { duration: 1200, fill: "forwards" });
+                }
+
+                progress.textContent = `${Math.abs(Math.round(nextPercentage))}%`;
+            }
+        }, { passive: false });
+    </script>
 </body>
 </html>

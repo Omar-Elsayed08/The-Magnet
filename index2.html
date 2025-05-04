@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wander - Literary Arts Magazine</title>
+
+    <style>
+        :root {
+            --coral: #e89082;
+            --forest: #3b574f;
+            --ocean: #4e83aa;
+            --lavender: #c1c2e4;
+            --sand: #dcc6be;
+            --c-grey: #f0f0f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+             /* Ensure body takes full scroll height */
+             height: 100%;
+             position: relative; /* Needed for absolute positioning context of .route */
+        }
+
+        body {
+            background-color: var(--sand);
+            color: var(--forest);
+            overflow-x: hidden;
+            /* Add padding top to prevent content from hiding under fixed nav */
+            padding-top: 70px; /* Adjust based on nav height */
+        }
+
+        /* --- Route/Trail Styles --- */
+        .route {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            /* Make the container height match the document scroll height */
+            /* This can be tricky with pure CSS. Absolute positioning with height 100%
+               usually refers to the nearest positioned ancestor's height.
+               If body/html height isn't set correctly, it might default to viewport.
+               Let's try ensuring body/html have height first. If issues persist,
+               JS might be needed to dynamically set height. */
+            height: 100%;
+            min-height: 100%; /* Try ensuring it's at least viewport height */
+            pointer-events: none;
+            z-index: 5;
+            overflow: visible; /* Allow SVG content (path) to be drawn outside bounds if needed */
+        }
+
+        .route svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; /* SVG element fills the .route container */
+            overflow: visible; /* Allow path drawing outside viewBox if needed */
+        }
+
+        .route svg path.dashed {
+            fill: none;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 8 8;
+            stroke: var(--forest);
+            /* Ensure vector-effect prevents stroke width scaling */
+            vector-effect: non-scaling-stroke;
+        }
+
+        .route svg mask path.mask-path {
+            fill: none;
+            stroke: white;
+            stroke-width: 5; /* Adjust width as needed for mask effect */
+            stroke-linecap: round;
+             /* Ensure vector-effect prevents stroke width scaling */
+             vector-effect: non-scaling-stroke;
+        }
+
+        /* Hide mobile path by default */
+        .route svg.mobile {
+            display: none;
+        }
+
+        /* Media query for mobile/desktop swap */
+        @media (max-width: 768px) {
+             body {
+                 padding-top: 60px; /* Adjust body padding for smaller nav if needed */
+             }
+            .route svg:not(.mobile) {
+                display: none; /* Hide desktop path on mobile */
+            }
+            .route svg.mobile {
+                display: block; /* Show mobile path on mobile */
+            }
+             /* Adjust hero height for mobile nav */
+             .hero {
+                 height: calc(100vh - 60px);
+                 margin-top: -60px;
+             }
+             /* Mobile Navigation Adjustments */
+             .et-hero-tabs-container {
+                height: 60px;
+                flex-direction: column;
+                align-items: flex-start;
+                overflow: hidden;
+                max-height: 60px;
+                background: var(--forest);
+             }
+             .et-hero-tabs-container.mobile-menu-open { max-height: 500px; }
+             .et-hero-tab { padding: 15px 20px; width: 100%; justify-content: flex-start; height: auto; display: none; }
+             .et-hero-tabs-container.mobile-menu-open .et-hero-tab { display: flex; }
+             .et-hero-tab-slider { display: none; }
+             .mobile-menu-btn { display: block; }
+             section { padding: 80px 15px; }
+             .section-title { font-size: 2.5rem; }
+             .section-text { font-size: 1.1rem; }
+             .hero-title { font-size: 3rem; }
+             .hero-subtitle { font-size: 1.2rem; }
+        }
+        /* --- End Route/Trail Styles --- */
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: calc(100vh - 70px); /* Account for fixed nav height */
+            margin-top: -70px; /* Pull hero up */
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-color: var(--sand);
+        }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(193, 194, 228, 0.3), rgba(59, 87, 79, 0.5)); z-index: 1; }
+        .hero-content { position: relative; z-index: 2; text-align: center; max-width: 800px; padding: 0 20px; }
+        .hero-title { font-size: 5rem; margin-bottom: 20px; color: var(--forest); letter-spacing: 1px; text-transform: uppercase; font-weight: 900; text-shadow: 4px 4px 4px rgb(61, 59, 57); font-family: 'Bestie Seventy', sans-serif !important; }
+        .hero-subtitle { font-size: 1.5rem; margin-bottom: 40px; color: var(--forest); font-weight: 300; }
+        .hero-button { padding: 12px 30px; background-color: var(--coral); color: white; border: none; border-radius: 30px; font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; font-weight: 600; box-shadow: 0 4px 15px rgba(232, 144, 130, 0.5); }
+        .hero-button:hover { background-color: var(--ocean); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(78, 131, 170, 0.6); }
+
+        /* Navigation */
+        .et-hero-tabs-container { display: flex; flex-direction: row; position: fixed; top: 0; left: 0; width: 100%; height: 70px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); background: var(--forest); z-index: 1000; transition: all 0.3s ease; }
+        .et-hero-tab { display: flex; justify-content: center; align-items: center; flex: 1; color: white; letter-spacing: 0.1rem; transition: all 0.3s ease; font-size: 0.8rem; text-decoration: none; height: 100%; }
+        .et-hero-tab:hover { color: var(--lavender); background: rgba(78, 131, 170, 0.1); }
+        .et-hero-tab.active { color: var(--coral); font-weight: 600; }
+        .et-hero-tab-slider { position: absolute; bottom: 0; width: 0; height: 3px; background: var(--coral); transition: left 0.3s ease, width 0.3s ease; }
+        .mobile-menu-btn { display: none; position: absolute; top: 50%; right: 15px; transform: translateY(-50%); width: 30px; height: 25px; cursor: pointer; z-index: 1001; background: none; border: none; }
+        .mobile-menu-btn span { position: absolute; left: 0; height: 3px; width: 100%; background: white; border-radius: 3px; transition: all 0.3s ease; }
+        .mobile-menu-btn span:nth-child(1) { top: 0; }
+        .mobile-menu-btn span:nth-child(2) { top: 10px; }
+        .mobile-menu-btn span:nth-child(3) { top: 20px; }
+        .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(7px, 7px); }
+        .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
+
+        /* Floating elements */
+        .floating { position: absolute; background: var(--lavender); opacity: 0.3; border-radius: 50%; z-index: 0; animation: float 15s ease-in-out infinite; }
+        .floating:nth-child(1) { width: 150px; height: 150px; top: 10%; left: 10%; animation-delay: 0s; background: var(--coral); }
+        .floating:nth-child(2) { width: 200px; height: 200px; top: 60%; left: 80%; animation-delay: -2s; animation-duration: 18s; background: var(--ocean); }
+        .floating:nth-child(3) { width: 100px; height: 100px; top: 30%; left: 80%; animation-delay: -5s; animation-duration: 12s; background: var(--lavender); }
+        .floating:nth-child(4) { width: 80px; height: 80px; top: 70%; left: 20%; animation-delay: -7s; animation-duration: 20s; background: var(--forest); }
+        @keyframes float { 0% { transform: translate(0, 0); } 50% { transform: translate(-20px, -20px); } 100% { transform: translate(0, 0); } }
+
+        /* Sections */
+        section { position: relative; min-height: 100vh; padding: 100px 20px; display: flex; justify-content: center; align-items: center; }
+        .section-content { max-width: 1000px; text-align: center; position: relative; z-index: 2; }
+        .section-title { font-size: 3rem; margin-bottom: 30px; color: var(--forest); }
+        .section-text { font-size: 1.2rem; line-height: 1.8; margin-bottom: 30px; color: var(--forest); }
+        #about { background-color: var(--sand); }
+        #submissions { background-color: var(--lavender); }
+        #team { background-color: var(--c-grey); }
+        #contact { background-color: var(--ocean); }
+        #contact .section-title, #contact .section-text { color: white; }
+
+        /* Font Face */
+        @font-face { font-family: 'Bestie Seventy'; src: url('styles/Bestie Seventy.ttf') format('truetype'); font-display: swap !important; }
+    </style>
+</head>
+
+<body>
+
+    <div class="route">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 300 1030" /* Adjusted viewBox height slightly */
+            style="enable-background:new 0 0 300 1030;" xml:space="preserve"
+            preserveAspectRatio="none" /* === ADDED THIS LINE === */ >
+            <defs>
+                <mask id="trailMaskDesktop">
+                    <path class="mask-path" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"
+                        d="M 150 10 C 100 50 200 90 150 130 S 100 210 150 250 C 200 290 100 330 150 370 S 200 450 150 490 C 100 530 200 570 150 610 S 100 690 150 730 A 60 60 0 0 0 150 730 Q 180 750 150 800 T 150 900 C 120 950 180 1000 150 1020">
+                    </path>
+                </mask>
+            </defs>
+            <path class="dashed" mask="url(#trailMaskDesktop)"
+                d="M 150 10 C 100 50 200 90 150 130 S 100 210 150 250 C 200 290 100 330 150 370 S 200 450 150 490 C 100 530 200 570 150 610 S 100 690 150 730 A 60 60 0 0 0 150 730 Q 180 750 150 800 T 150 900 C 120 950 180 1000 150 1020">
+            </path>
+        </svg>
+
+        <svg class="mobile" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px" y="0px" viewBox="0 0 300 1030" /* Adjusted viewBox height slightly */
+             style="enable-background:new 0 0 300 1030;" xml:space="preserve"
+             preserveAspectRatio="none" /* === ADDED THIS LINE === */ >
+            <defs>
+                <mask id="trailMaskMobile">
+                     <path class="mask-path" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"
+                        d="M 150 10 C 100 50 200 90 150 130 S 100 210 150 250 C 200 290 100 330 150 370 S 200 450 150 490 C 100 530 200 570 150 610 S 100 690 150 730 A 60 60 0 0 0 150 730 Q 180 750 150 800 T 150 900 C 120 950 180 1000 150 1020">
+                    </path>
+                </mask>
+            </defs>
+            <path class="dashed" mask="url(#trailMaskMobile)"
+                 d="M 150 10 C 100 50 200 90 150 130 S 100 210 150 250 C 200 290 100 330 150 370 S 200 450 150 490 C 100 530 200 570 150 610 S 100 690 150 730 A 60 60 0 0 0 150 730 Q 180 750 150 800 T 150 900 C 120 950 180 1000 150 1020">
+            </path>
+        </svg>
+    </div>
+
+    <nav class="et-hero-tabs-container">
+        <a class="et-hero-tab" href="#about">About</a>
+        <a class="et-hero-tab" href="#submissions">Submissions</a>
+        <a class="et-hero-tab" href="#team">Team</a>
+        <a class="et-hero-tab" href="#contact">Contact</a>
+        <span class="et-hero-tab-slider"></span>
+        <button class="mobile-menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+
+    <div class="hero">
+         <div id="Render"></div> <div class="floating"></div>
+         <div class="floating"></div>
+         <div class="floating"></div>
+         <div class="floating"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">The Magnet</h1>
+            <p class="hero-subtitle">A Literary Arts Magazine Exploring Paths Unseen</p>
+            <a href="#about" class="hero-button">Begin Journey</a>
+        </div>
+    </div>
+
+
+    <section id="about">
+        <div class="section-content">
+            <h2 class="section-title">About Wander</h2>
+            <p class="section-text">Wander is a student-led literary arts magazine exploring themes of journey,
+                discovery, and the unknown paths we take. Through poetry, prose, photography, and visual arts, we
+                invite you to explore the meanderings of creative expression.</p>
+        </div>
+    </section>
+
+    <section id="submissions">
+        <div class="section-content">
+            <h2 class="section-title">Submissions</h2>
+            <p class="section-text">We welcome submissions from students and faculty. Whether you're a writer,
+                photographer, painter, or digital artist, there's a place for your work in our pages. Share your
+                perspective on wandering through the literal and metaphorical landscapes of life.</p>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="section-content">
+            <h2 class="section-title">Our Team</h2>
+            <p class="section-text">Meet the wanderers behind the magazine - passionate students dedicated to
+                curating and presenting the best creative works from our community.</p>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="section-content">
+            <h2 class="section-title">Contact Us</h2>
+            <p class="section-text">Have questions or want to join our team? Reach out to us and become part of our
+                wandering community.</p>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+    <script>
+    // Navigation Logic (initializeNavigation function) - unchanged
+    function initializeNavigation() {
+        const tabs = document.querySelectorAll('.et-hero-tab');
+        const slider = document.querySelector('.et-hero-tab-slider');
+        const navContainer = document.querySelector('.et-hero-tabs-container');
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        let activeTab = document.querySelector('.et-hero-tab.active');
+
+        function updateSlider(targetTab) {
+            if (!targetTab || !slider) return;
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) { slider.style.width = '0px'; return; }
+            const targetRect = targetTab.getBoundingClientRect();
+            const containerRect = navContainer.getBoundingClientRect();
+            const sliderLeft = targetRect.left - containerRect.left;
+            slider.style.width = targetRect.width + 'px';
+            slider.style.left = sliderLeft + 'px';
+            tabs.forEach(t => t.classList.remove('active'));
+            targetTab.classList.add('active');
+            activeTab = targetTab;
+        }
+
+        if (!activeTab && tabs.length > 0) { activeTab = tabs[0]; activeTab.classList.add('active'); }
+        setTimeout(() => updateSlider(activeTab), 100);
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function (e) {
+                updateSlider(this);
+                if (navContainer.classList.contains('mobile-menu-open')) {
+                    navContainer.classList.remove('mobile-menu-open');
+                    mobileMenuBtn.classList.remove('active');
+                }
+            });
+        });
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navContainer.classList.toggle('mobile-menu-open');
+                mobileMenuBtn.classList.toggle('active');
+            });
+        }
+        window.addEventListener('resize', () => { updateSlider(activeTab); });
+
+        const sections = document.querySelectorAll('section');
+        function updateActiveTabOnScroll() {
+             let currentSectionId = '';
+             const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+             const navHeight = navContainer ? navContainer.offsetHeight : 70; // Use actual or default height
+
+             sections.forEach(section => {
+                 const sectionTop = section.offsetTop - (navHeight + 50);
+                 const sectionBottom = sectionTop + section.offsetHeight;
+                 if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                     currentSectionId = '#' + section.id;
+                 }
+             });
+
+             if (!currentSectionId && sections.length > 0 && scrollPosition < (sections[0].offsetTop - navHeight - 50)) {
+                currentSectionId = sections[0].id ? '#' + sections[0].id : ''; // Default to first section if near top
+             } else if (!currentSectionId && scrollPosition >= (document.documentElement.scrollHeight - window.innerHeight - 50)) {
+                 // If scrolled to the very bottom, keep the last section active
+                 if (sections.length > 0) {
+                     currentSectionId = '#' + sections[sections.length - 1].id;
+                 }
+             }
+
+
+             const newActiveTab = currentSectionId ? document.querySelector(`.et-hero-tab[href="${currentSectionId}"]`) : null;
+             if (newActiveTab && newActiveTab !== activeTab) {
+                updateSlider(newActiveTab);
+             } else if (!newActiveTab && !currentSectionId && activeTab) {
+                 // Optional: If scrolled out of all sections (e.g., in hero), maybe deactivate all or revert to first?
+                 // updateSlider(tabs[0]); // Example: Revert to first tab
+             }
+         }
+
+         // Attach to Lenis scroll event if Lenis is loaded
+         let lenisInstance;
+         setTimeout(() => {
+              if (typeof lenis !== 'undefined') {
+                  lenisInstance = lenis;
+                  lenisInstance.on('scroll', updateActiveTabOnScroll);
+                   console.log("Attached navigation scroll update to Lenis.");
+              } else {
+                  window.addEventListener('scroll', updateActiveTabOnScroll);
+                   console.log("Attached navigation scroll update to window scroll (Lenis not found).");
+              }
+         }, 0);
+    }
+    document.addEventListener('DOMContentLoaded', initializeNavigation);
+    </script>
+
+    <script>
+        // Canvas particle animation - unchanged
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const renderDiv = document.getElementById('Render');
+         if (renderDiv) {
+            renderDiv.appendChild(canvas);
+            canvas.style.position = 'absolute'; canvas.style.top = 0; canvas.style.left = 0; canvas.style.zIndex = 0;
+            function resizeCanvas() {
+                 if (renderDiv.offsetWidth > 0 && renderDiv.offsetHeight > 0) { canvas.width = renderDiv.offsetWidth; canvas.height = renderDiv.offsetHeight; }
+                 else { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+            }
+            window.addEventListener('resize', resizeCanvas);
+            const particles = []; const particleCount = 100;
+            function createParticles() {
+                particles.length = 0; const centerX = canvas.width / 2; const centerY = canvas.height / 2;
+                for (let i = 0; i < particleCount; i++) { particles.push({ angle: Math.random() * Math.PI * 2, radius: 50 + Math.random() * Math.min(canvas.width, canvas.height) * 0.3, speed: 0.01 + Math.random() * 0.02, size: 2 + Math.random() * 3, color: `hsl(${Math.random() * 360}, 60%, 70%)`, centerX: centerX, centerY: centerY }); }
+            }
+            function animate() {
+                 if (!canvas.width || !canvas.height) { requestAnimationFrame(animate); return; }
+                ctx.fillStyle = 'rgba(220, 198, 190, 0.08)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.angle += p.speed; const x = p.centerX + Math.cos(p.angle) * p.radius; const y = p.centerY + Math.sin(p.angle) * p.radius; ctx.beginPath(); ctx.arc(x, y, p.size, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.fill(); });
+                requestAnimationFrame(animate);
+            }
+             resizeCanvas(); createParticles(); animate();
+         } else { console.error("Element with ID 'Render' not found for canvas."); }
+    </script>
+
+    <script>
+        // SVG Path Animation via Lenis - unchanged JS, relies on CSS/SVG fix
+        document.addEventListener('DOMContentLoaded', () => {
+            const lenis = new Lenis();
+            function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+            requestAnimationFrame(raf);
+
+            const desktopPathSelector = '.route svg:not(.mobile) mask path.mask-path';
+            const mobilePathSelector = '.route svg.mobile mask path.mask-path';
+            const segmentLength = 2000; // Keep or adjust this segment length as needed
+            const pathsToAnimate = [];
+
+            function preparePath(selector) {
+                const pathElement = document.querySelector(selector);
+                if (pathElement) {
+                    try {
+                        const svgParent = pathElement.closest('svg');
+                        const length = pathElement.getTotalLength();
+                        if (length === 0) { console.warn(`Mask path length 0: ${selector}. Check SVG structure/visibility.`); return; }
+
+                        const pathData = { element: pathElement, length: length, segment: segmentLength, svgParent: svgParent };
+                        pathsToAnimate.push(pathData);
+                        initializePath(pathData);
+
+                    } catch (e) { console.error("Error processing mask path:", e, selector); }
+                } else { console.log(`Mask path not found: ${selector}`); }
+            }
+
+            function initializePath(pathData) {
+                if (!pathData || !pathData.element) return;
+                const totalLength = pathData.length;
+                const segment = pathData.segment;
+                if (totalLength > 0) {
+                    pathData.element.style.strokeDasharray = `${segment} ${totalLength}`;
+                    pathData.element.style.strokeDashoffset = totalLength; // Start fully hidden
+                    pathData.element.style.visibility = 'visible';
+                     // Add non-scaling-stroke via JS as fallback/ensure
+                     pathData.element.style.vectorEffect = 'non-scaling-stroke';
+                } else {
+                     console.warn("Skipping initialization due to zero path length:", pathData.element);
+                 }
+            }
+
+            function updateAnimation(lenisInstance) {
+                 const scrollPercentage = lenisInstance.progress;
+                pathsToAnimate.forEach(pathData => {
+                    if (pathData.svgParent && window.getComputedStyle(pathData.svgParent).display !== 'none') {
+                         const totalLength = pathData.length;
+                         if (totalLength === 0) return;
+
+                        const segment = pathData.segment;
+                        const currentHeadPosition = totalLength * scrollPercentage;
+                        const offset = totalLength - currentHeadPosition;
+
+                        pathData.element.style.strokeDasharray = `${segment} ${totalLength}`;
+                        pathData.element.style.strokeDashoffset = offset;
+                    }
+                });
+            }
+
+            function onResize() {
+                pathsToAnimate.forEach(pathData => {
+                     try {
+                        pathData.length = pathData.element.getTotalLength();
+                        if (pathData.length === 0) {
+                            console.warn("Path length became 0 on resize:", pathData.element);
+                             pathData.element.getBoundingClientRect();
+                             pathData.length = pathData.element.getTotalLength();
+                        }
+                        initializePath(pathData);
+                     } catch(e) { console.error("Error recalculating path length on resize:", e); }
+                });
+                // Update immediately with current progress, ensuring lenis object is available
+                if (typeof lenis !== 'undefined') {
+                    updateAnimation(lenis);
+                } else {
+                     // Fallback if lenis isn't ready yet (less likely with DOMContentLoaded)
+                     const currentProgress = (window.scrollY || window.pageYOffset) / (document.documentElement.scrollHeight - window.innerHeight);
+                     updateAnimation({ progress: currentProgress });
+                 }
+            }
+
+            // --- Execution ---
+            preparePath(desktopPathSelector);
+            preparePath(mobilePathSelector);
+
+            if (pathsToAnimate.length > 0) {
+                lenis.on('scroll', updateAnimation);
+                window.addEventListener('resize', onResize, { passive: true });
+                console.log(`Lenis-driven SVG mask path segment animation attached.`);
+                setTimeout(() => {
+                     pathsToAnimate.forEach(p => {
+                        if (p.length === 0) p.length = p.element.getTotalLength();
+                        initializePath(p);
+                     });
+                     // Use lenis instance if available for initial draw
+                     if (typeof lenis !== 'undefined') {
+                        updateAnimation(lenis);
+                     } else {
+                         const currentProgress = (window.scrollY || window.pageYOffset) / (document.documentElement.scrollHeight - window.innerHeight);
+                         updateAnimation({ progress: currentProgress });
+                     }
+                }, 100);
+            } else {
+                console.error("Mask path animation could not initialize. Check selectors/SVG structure.");
+            }
+        });
+    </script>
+
+</body>
+</html>

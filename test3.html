@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modular Scroll Effects with Lenis & SVG Path (Foreground)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* --- Lenis Specific CSS --- */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-stopped { overflow: hidden !important; }
+        /* --- End Lenis CSS --- */
+
+        /* --- Color Scheme Variables --- */
+        :root {
+            --coral: #e89082;
+            --forest: #3b574f;
+            --ocean: #4e83aa;
+            --lavender: #c1c2e4;
+            --sand: #dac4bc;
+            --purple: #726574;
+            --c-grey: #f0f0f0;
+            --dark-accent: #2a403b;
+            --path-background-color: #e0e0e0;
+            --path-draw-color: var(--coral);
+        }
+
+        /* --- Custom Font --- */
+        @font-face {
+            font-family: 'Bestie Seventy';
+            src: url('styles/Bestie Seventy.ttf') format('truetype'); /* Ensure path is correct */
+            font-display: swap !important;
+        }
+
+        /* --- Base Styles --- */
+        html,
+        body {
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.5s ease;
+            position: relative; /* Context for route-container */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ocean);
+            color: var(--ocean);
+            line-height: 1.6;
+        }
+
+        h1,
+        span {
+            font-family: 'Bestie Seventy', cursive;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+            color: var(--coral);
+            margin-bottom: 1rem;
+            letter-spacing: 4px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark-accent);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            line-height: 1.3;
+        }
+
+        p {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: var(--lavender);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* --- Section Styling --- */
+        section {
+            padding: 6rem 2rem;
+            box-sizing: border-box;
+            max-width: calc(100% - 60px);
+            overflow: hidden;
+            position: relative;
+            /* Content sections now have a lower z-index than the path */
+            z-index: 1;
+            margin: 30px auto;
+            border-radius: 20px;
+        }
+
+        /* REMOVED: Background styles for section > div, .vertical-spacer > p */
+        /* Path is now in front, so no need for transparency */
+
+        /* Specific section backgrounds */
+        .intro-section {
+            background-color: var(--ocean);
+            color: var(--ocean);
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            max-width: 100%;
+            z-index: 1; /* Keep content z-index consistent */
+        }
+
+        .end-section {
+            background-color: var(--ocean);
+            color: var(--c-grey);
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            max-width: 100%;
+            border-radius: 0;
+             z-index: 1; /* Keep content z-index consistent */
+        }
+
+        /* --- Horizontal Scroll Container --- */
+        .horizontal-container {
+            width: auto;
+            height: 100vh;
+            display: block;
+            flex-wrap: nowrap;
+            position: relative;
+            overflow: hidden;
+            margin: 30px 0;
+            box-sizing: border-box;
+            /* Content sections now have a lower z-index than the path */
+            z-index: 1;
+        }
+
+        /* --- Horizontal Panel Styling --- */
+        .horizontal-panel {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem;
+            box-sizing: border-box;
+            text-align: center;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            position: relative; /* Needed for potential internal stacking */
+             z-index: 1; /* Keep content z-index consistent */
+        }
+
+        /* --- Panel Backgrounds --- */
+       
+
+        /* --- Scroll Down Indicator --- */
+        .scroll-down {
+            margin-top: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: bounce 2s infinite;
+            color: var(--lavender);
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            /* Ensure scroll down is above path */
+            z-index: 11; /* Higher than route-container */
+            position: relative;
+        }
+
+        .arrow {
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 25px solid var(--forest);
+            margin-top: 15px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-25px); }
+            60% { transform: translateY(-12px); }
+        }
+
+        /* --- Vertical Spacer --- */
+        .vertical-spacer {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            background-color: var(--ocean);
+            color: var(--c-grey);
+            text-align: center;
+            padding: 3rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            margin: 30px auto;
+            max-width: calc(100% - 60px);
+            overflow: hidden;
+            position: relative;
+             /* Content sections now have a lower z-index than the path */
+            z-index: 1;
+        }
+
+        .vertical-spacer p {
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            margin-bottom: 20px;
+            color: var(--c-grey);
+        }
+
+        /* --- SVG Path Styling --- */
+        .route-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; /* Set dynamically by JS */
+            pointer-events: none; /* Allow clicks through */
+            /* Bring SVG path to the very front */
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .route-container svg {
+            width: 100%;
+            height: 100%;
+            preserveAspectRatio: none;
+            overflow: visible;
+        }
+
+        .route-container path {
+            fill: none;
+            stroke-width: 5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .route-container path.dashed {
+            stroke: var(--path-background-color);
+            stroke-dasharray: 10, 10;
+             opacity: 0.5; /* Make dashed line slightly transparent */
+        }
+
+        .route-container path.overlay {
+            stroke: var(--path-draw-color);
+        }
+
+        /* --- Responsive adjustments --- */
+        @media (max-width: 768px) {
+            h2 { font-size: 2rem; margin-bottom: 1rem; }
+            p { font-size: 1rem; line-height: 1.5; }
+
+            section, .vertical-spacer {
+                padding: 4rem 1.5rem;
+                border-radius: 15px;
+                margin: 20px auto;
+                max-width: calc(100% - 40px);
+            }
+            .intro-section, .end-section {
+                max-width: 100%;
+                border-radius: 0;
+                margin: 0 auto;
+            }
+
+            .vertical-spacer { font-size: 2rem; height: auto; min-height: 40vh; }
+            .scroll-down { margin-top: 50px; font-size: 1rem; }
+            .arrow { border-left-width: 12px; border-right-width: 12px; border-top-width: 18px; margin-top: 10px; }
+            .horizontal-container { border-radius: 15px; margin: 20px 0; }
+            .horizontal-panel { padding: 3rem 1.5rem; }
+            .route-container path { stroke-width: 4; }
+        }
+    </style>
+</head>
+
+<body>
+
+  
+
+    <section class="intro-section">
+        <div>
+            <h1 id="introTitle" class="text-5xl md:text-7xl font-bold mb-4">THE MAGNET</h1>
+            <h2 class="text-xl md:text-2xl max-w-3xl" style="color: var(--lavender);">A Literary Arts Magazine Exploring Paths Unseen </h2>
+            <div id="1" class="scroll-down">
+                <p>Begin Journey</p>
+                <div class="arrow"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="vertical-spacer">
+        <p id="spacerText1">The creative elements you'll find in <span>The Magnet</span> are nothing short of stunning. They speak with such sophistication, meet the eye and ear with mature and diverse discoveries.</p>
+    </section>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <br>
+    <div class="route-container">
+      <svg id="main-svg-path" viewBox="0 0 500 6000" preserveAspectRatio="none">
+          <path class="dashed" 
+          d="M 250 50 C 150 500, 350 1000, 250 1500 S 150 2000, 250 2500 C 350 3000, 150 3500, 250 4000 S 350 4500, 250 5000 C 150 5500, 350 5950, 250 5950" />
+          <path class="overlay" 
+          d="M 250 50 C 150 500, 350 1000, 250 1500 S 150 2000, 250 2500 C 350 3000, 150 3500, 250 4000 S 350 4500, 250 5000 C 150 5500, 350 5950, 250 5950" />
+      </svg>
+  </div>
+    <div class="horizontal-container" id="sectionHorizontalLeft">
+        <div class="horizontal-panel"><h2>Panel 1</h2> <p>This section scrolls horizontally to the left.</p></div>
+        <div class="horizontal-panel"><h2>Panel 2</h2> <p>Keep scrolling down.</p></div>
+        <div class="horizontal-panel"><h2>Panel 3</h2> <p>Almost there...</p></div>
+        <div class="horizontal-panel"><h2>Panel 4</h2> <p>End of horizontal section.</p></div>
+    </div>
+
+    <section class="vertical-spacer">
+        <p>Horizontal Scroll (Right)</p>
+    </section>
+
+    <div class="horizontal-container" id="sectionHorizontalRight">
+        <div class="horizontal-panel"><h2>Panel A</h2> <p>This section scrolls horizontally to the right.</p></div>
+        <div class="horizontal-panel"><h2>Panel B</h2> <p>Notice the different direction.</p></div>
+        <div class="horizontal-panel"><h2>Panel C</h2> <p>Keep scrolling...</p></div>
+        <div class="horizontal-panel"><h2>Panel D</h2> <p>End of right scroll section.</p></div>
+    </div>
+
+    <section class="vertical-spacer">
+        <p>Diagonal Scroll (Right & Down)</p>
+    </section>
+
+    <div class="horizontal-container" id="sectionDiagonal">
+        <div class="horizontal-panel "><h2>Panel X</h2> <p>This section scrolls diagonally.</p></div>
+        <div class="horizontal-panel "><h2>Panel Y</h2> <p>Moving right and down.</p></div>
+        <div class="horizontal-panel "><h2>Panel Z</h2> <p>A different kind of movement.</p></div>
+    </div>
+
+    <section class="vertical-spacer">
+        <p>Fade and Scale Effect</p>
+    </section>
+
+    <div class="horizontal-container" id="sectionFadeScale">
+        <div class="horizontal-panel "><h2>Effect 1</h2><p>Panels fade in and scale up.</p></div>
+        <div class="horizontal-panel "><h2>Effect 2</h2><p>As you scroll...</p></div>
+        <div class="horizontal-panel "><h2>Effect 3</h2><p>Watch them appear.</p></div>
+    </div>
+
+    <section class="end-section">
+        <div>
+            <h2 id="endTitle" class="text-4xl md:text-6xl font-bold mb-4" style="color: var(--sand);">End of Effects</h2>
+            <p class="text-xl md:text-2xl max-w-3xl" style="color: var(--lavender);">The SVG path animation completes here.</p>
+        </div>
+    </section>
+
+    <script src='https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js'></script>
+    <script>
+        // Lenis Setup
+        const lenis = new Lenis();
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+
+        // GSAP ScrollTrigger Logic
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- Function to setup SVG Path Animation ---
+        function setupSvgPathAnimation() {
+            const svgContainer = document.querySelector('.route-container');
+            const pathElement = document.querySelector('.route-container path.overlay');
+            const svgElement = document.getElementById('main-svg-path');
+
+            if (!pathElement || !svgContainer || !svgElement) {
+                console.error("SVG path elements not found.");
+                return null; // Return null if setup fails
+            }
+
+            let pathLength = 0;
+
+            const calculatePath = () => {
+                try {
+                   pathLength = pathElement.getTotalLength();
+                   if (pathLength <= 0) {
+                       console.warn("SVG path has zero or negative length:", pathElement);
+                       // Ensure dasharray/offset are reset if length is invalid
+                       pathElement.style.strokeDasharray = "none";
+                       pathElement.style.strokeDashoffset = "0";
+                       return false;
+                   }
+                   pathElement.style.strokeDasharray = pathLength + " " + pathLength;
+                   // Calculate current scroll progress to set initial offset correctly on refresh
+                   const scrollRatio = Math.max(0, Math.min(1, (window.scrollY || document.documentElement.scrollTop) / (document.documentElement.scrollHeight - window.innerHeight)));
+                   pathElement.style.strokeDashoffset = pathLength * (1 - scrollRatio);
+
+                } catch (error) {
+                   console.error("Error calculating path length:", error);
+                   pathElement.style.strokeDasharray = "none";
+                   pathElement.style.strokeDashoffset = "0";
+                   return false;
+                }
+                return true;
+            };
+
+            const setSVGHeight = () => {
+                const scrollHeight = document.documentElement.scrollHeight;
+                svgContainer.style.height = `${scrollHeight}px`;
+                // Recalculate path after height change
+                calculatePath();
+            };
+
+            // Initial setup
+            setSVGHeight();
+            if (!calculatePath()) return null; // Exit if initial calc fails
+
+            // Kill existing trigger if it exists
+            ScrollTrigger.getById("svgPathTrigger")?.kill();
+
+            ScrollTrigger.create({
+                id: "svgPathTrigger",
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 0.5,
+                invalidateOnRefresh: false, // Use manual refresh via setSVGHeight
+                onUpdate: self => {
+                    if (pathLength > 0) {
+                       // Use clamped progress to avoid potential floating point issues
+                       const progress = Math.max(0, Math.min(1, self.progress));
+                       pathElement.style.strokeDashoffset = pathLength * (1 - progress);
+                    }
+                },
+                 // Set final states explicitly
+                 onLeave: () => { if(pathLength > 0) pathElement.style.strokeDashoffset = 0; },
+                 onEnterBack: () => { if(pathLength > 0) pathElement.style.strokeDashoffset = pathLength; }, // Use onEnterBack for consistency
+            });
+
+             return { setSVGHeight, calculatePath }; // Return controls
+        }
+
+        // --- Function to set up a scroll effect for panels ---
+        function setupScrollEffect(config) {
+            ScrollTrigger.getById(`st-${config.containerId}`)?.kill();
+            const container = document.getElementById(config.containerId);
+            if (!container) { console.error(`Container "${config.containerId}" not found.`); return; }
+            const panels = gsap.utils.toArray(config.panelsSelector, container);
+            const numPanels = panels.length;
+            if (numPanels === 0) { console.warn(`No panels found for "${config.containerId}".`); return; }
+
+            let totalWidth = 0;
+            if (panels.length > 0) { totalWidth = panels[0].offsetWidth * numPanels; }
+
+            let isHorizontal = config.animationProps.hasOwnProperty('x') || (config.animationProps.hasOwnProperty('xPercent') && config.animationProps.xPercent !== 0);
+
+            if (isHorizontal) {
+                container.style.width = `${totalWidth}px`;
+                container.style.display = 'flex';
+                container.style.flexWrap = 'nowrap';
+            } else {
+                container.style.width = '100%';
+                container.style.display = 'block';
+                container.style.flexWrap = 'wrap';
+                panels.forEach(panel => panel.style.display = 'flex'); // Keep panel display consistent
+            }
+
+            gsap.set(panels, { clearProps: "all" }); // Clear props before setting
+            if (config.initialProps && Object.keys(config.initialProps).length > 0) {
+                gsap.set(panels, config.initialProps);
+            }
+
+            let endScrollValue;
+            if (isHorizontal) {
+                endScrollValue = totalWidth - window.innerWidth;
+                if (endScrollValue < 1) endScrollValue = 1;
+            } else {
+                 const panelHeight = panels[0]?.offsetHeight || window.innerHeight;
+                 endScrollValue = `+=${panelHeight * numPanels}`; // Pin for total estimated height
+            }
+
+            const finalScrollTriggerProps = {
+                id: `st-${config.containerId}`,
+                trigger: container,
+                pin: true,
+                scrub: 1,
+                snap: isHorizontal && numPanels > 1 ? 1 / (numPanels - 1) : 0,
+                end: `+=${endScrollValue}`,
+                invalidateOnRefresh: true, // Panel triggers should invalidate
+                // markers: true,
+                ...config.scrollTriggerProps
+            };
+
+            gsap.killTweensOf(panels); // Kill existing tweens
+            gsap.to(panels, {
+                ease: "none",
+                ...config.animationProps,
+                scrollTrigger: finalScrollTriggerProps
+            });
+        }
+
+
+        // --- Configurations for each scroll effect section (Unchanged) ---
+        const panelsLeft = gsap.utils.toArray('#sectionHorizontalLeft .horizontal-panel');
+        const horizontalLeftConfig = { containerId: 'sectionHorizontalLeft', panelsSelector: '.horizontal-panel', animationProps: { xPercent: -100 * (panelsLeft.length - 1) }, scrollTriggerProps: {} };
+        const panelsRight = gsap.utils.toArray('#sectionHorizontalRight .horizontal-panel');
+        const horizontalRightConfig = { containerId: 'sectionHorizontalRight', panelsSelector: '.horizontal-panel', initialProps: { xPercent: -100 * (panelsRight.length - 1) }, animationProps: { xPercent: 0 }, scrollTriggerProps: {} };
+        const panelsDiagonal = gsap.utils.toArray('#sectionDiagonal .horizontal-panel');
+        const diagonalConfig = { containerId: 'sectionDiagonal', panelsSelector: '.horizontal-panel', initialProps: { xPercent: -100 * (panelsDiagonal.length - 1), yPercent: 0 }, animationProps: { xPercent: 0, yPercent: 60 * (panelsDiagonal.length - 1) }, scrollTriggerProps: {} };
+        const panelsFadeScale = gsap.utils.toArray('#sectionFadeScale .horizontal-panel');
+        const fadeScaleConfig = { containerId: 'sectionFadeScale', panelsSelector: '.horizontal-panel', initialProps: { opacity: 0, scale: 0.8, xPercent: 0 }, animationProps: { opacity: 1, scale: 1, xPercent: 0, stagger: 0.3, duration: 0.6 }, scrollTriggerProps: {} };
+
+
+        // --- Event Listeners ---
+        let svgPathControls = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupScrollEffect(horizontalLeftConfig);
+            setupScrollEffect(horizontalRightConfig);
+            setupScrollEffect(diagonalConfig);
+            setupScrollEffect(fadeScaleConfig);
+            svgPathControls = setupSvgPathAnimation();
+
+            setTimeout(() => {
+                ScrollTrigger.refresh();
+                if (svgPathControls) {
+                    svgPathControls.setSVGHeight(); // Ensure height is correct after initial refresh
+                }
+            }, 150);
+        });
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                // Update SVG height first, recalculate path
+                if (svgPathControls) {
+                    svgPathControls.setSVGHeight();
+                    // No need to call calculatePath here, setSVGHeight does it
+                }
+                // Refresh all triggers
+                ScrollTrigger.refresh();
+                // Re-run setSVGHeight after refresh might slightly change scrollHeight
+                if (svgPathControls) {
+                    setTimeout(() => svgPathControls.setSVGHeight(), 50);
+                }
+            }, 250);
+        });
+
+        window.addEventListener('load', () => {
+             setTimeout(() => {
+                 if (svgPathControls) {
+                     svgPathControls.setSVGHeight(); // Update height based on final loaded content
+                     // No need to call calculatePath here, setSVGHeight does it
+                 }
+                 ScrollTrigger.refresh(); // Refresh triggers based on final layout
+                 // One more height check after load refresh
+                 if (svgPathControls) {
+                     setTimeout(() => svgPathControls.setSVGHeight(), 50);
+                 }
+             }, 200);
+        });
+
+    </script>
+
+</body>
+</html>
+```
+
+**Summary of CSS Changes:**
+
+* `.route-container`: Changed `z-index` from `1` to `10`.
+* `section`, `.vertical-spacer`, `.horizontal-container`, `.horizontal-panel`: Changed `z-index` from `2` to `1` (or ensured they have a lower z-index than the path).
+* `.scroll-down`: Increased `z-index` to `11` to ensure it appears above the path.
+* Removed the `background-color` and `backdrop-filter` styles from `section > div` and `.vertical-spacer > p` as they are no longer necessary.
+* Added a slight `opacity` to `path.dashed` to make it less prominent now that it's overlaying content.
+
+The SVG path should now render on top of all the content sections and pane

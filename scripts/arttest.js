@@ -69,7 +69,7 @@ window.addEventListener('wheel', (e) => {
   
   // Get current percentage and calculate new target
   const currentPercentage = parseFloat(track.dataset.percentage || 0);
-  const delta = -e.deltaY * 0.02; // Adjust this value to control scroll speed
+  const delta = e.deltaY * 0.02; // Adjust this value to control scroll speed
   targetPercentage = Math.min(Math.max(currentPercentage - delta, -100), 0);
   
   // Store the new percentage
