@@ -5,8 +5,154 @@
   <title>3D Ebook Flip Animation</title>
   <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;1,300&amp;family=Quicksand:wght@500&amp;display=swap'><link rel="stylesheet" href="./literatureStyles.css">
   <link href="styles/literatureStyles.css" rel='stylesheet'>
+  <style>
+    :root {
+      --coral: #e89082;
+      --forest: #3b574f;
+      --ocean: #4e83aa;
+      --lavender: #c1c2e4;
+      --sand: #dcc6be;
+      --c-grey: #f0f0f0;
+    }
+    @font-face {
+      font-family: 'Bestie Seventy';
+      src: url('styles/Bestie Seventy.ttf') format('truetype');
+      font-display: swap;
+    }
+    body {
+      background: var(--sand);
+      color: var(--forest);
+      font-family: 'Open Sans', 'Quicksand', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .container {
+      background: linear-gradient(120deg, var(--lavender) 0%, var(--sand) 100%);
+      border-radius: 24px;
+      box-shadow: 0 6px 32px rgba(59,87,79,0.08);
+      max-width: 900px;
+      margin: 40px auto 60px auto;
+      padding: 32px 16px 32px 16px;
+    }
+    .literature-intro {
+      background: var(--lavender);
+      color: var(--forest);
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(59,87,79,0.07);
+      text-align: center;
+      max-width: 800px;
+      margin: 40px auto 0 auto;
+      padding: 32px 24px;
+    }
+    .literature-intro h1 {
+      font-family: 'Bestie Seventy', serif;
+      color: var(--coral);
+      font-size: 2.5rem;
+      margin-bottom: 0.5em;
+      letter-spacing: 2px;
+    }
+    .literature-intro p {
+      font-size: 1.15rem;
+      color: var(--ocean);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .books-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 32px;
+      justify-items: center;
+      align-items: center;
+      width: 100%;
+      max-width: 800px;
+      margin: 40px auto;
+    }
+    .mobile-layout {
+      background: var(--c-grey);
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(59,87,79,0.08);
+      padding: 18px 12px 24px 12px;
+      margin: 0 0 12px 0;
+      transition: box-shadow 0.2s, background 0.2s;
+      border: 1.5px solid var(--lavender);
+    }
+    .books-grid > .mobile-layout:hover {
+      background: var(--lavender);
+      box-shadow: 0 6px 24px rgba(59,87,79,0.13);
+      border-color: var(--coral);
+    }
+    .preface {
+      background: var(--sand);
+      border-radius: 12px;
+      padding: 18px 14px;
+      margin-top: 12px;
+      box-shadow: 0 1px 6px rgba(59,87,79,0.05);
+      border-left: 6px solid var(--coral);
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Bestie Seventy', serif;
+      color: var(--coral);
+      font-size: 1.3rem;
+      margin-bottom: 0.5em;
+    }
+    .header .title {
+      color: var(--forest);
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    .header .icon i {
+      color: var(--ocean);
+    }
+    .author {
+      color: var(--ocean);
+      font-size: 1rem;
+      margin-bottom: 0.5em;
+    }
+    .body {
+      color: var(--forest);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+    .body.story.long-body {
+      color: var(--forest);
+    }
+    .mobile-layout.empty {
+      background: none;
+      box-shadow: none;
+      pointer-events: none;
+    }
+    @media (max-width: 900px) {
+      .books-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+      }
+      .literature-intro {
+        margin: 24px 8px 0 8px;
+        padding: 20px 8px;
+      }
+      .mobile-layout {
+        padding: 12px 4px 16px 4px;
+      }
+      .container {
+        padding: 16px 2px 16px 2px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div id="navbar"></div>
+  <section class="literature-intro">
+    <h1>Wander: A Literary Journey</h1>
+    <p>
+      Welcome to our collection of literary works inspired by the theme <strong>"Wander"</strong>.<br>
+      Each piece in this issue explores journeys—both real and imagined, physical and emotional. As you read, we invite you to lose yourself in stories and poems that traverse unknown paths, seek new horizons, and reflect on the beauty of wandering. Enjoy the adventure!
+    </p>
+  </section>
 <!-- partial:index.partial.html -->
 <div class="container">
   <div class="info">
@@ -512,27 +658,13 @@ https://saranyamk.github.io/images-repo/book-side.svg
 -->
 <!-- partial -->
   <script src='https://kit.fontawesome.com/76e9768b91.js'></script>
-<style>
-.books-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 32px;
-  justify-items: center;
-  align-items: center;
-  width: 100%;
-  max-width: 800px;
-  margin: 40px auto;
-}
-.mobile-layout.empty {
-  background: none;
-  box-shadow: none;
-  pointer-events: none;
-}
-@media (max-width: 900px) {
-  .books-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, 1fr);
-  }
-}
-</style>
+
+<script>
+  // Load navbar2.html into the #navbar div
+  fetch('navbar2.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('navbar').innerHTML = data;
+    })
+    .catch(error => console.error('Error loading navbar:', error));
+</script>
